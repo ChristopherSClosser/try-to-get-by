@@ -1,0 +1,3 @@
+[run]
+include = getby/views.py,
+          intell/views.py,
