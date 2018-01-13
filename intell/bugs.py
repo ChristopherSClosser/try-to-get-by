@@ -1,5 +1,7 @@
 """Intelligent bugs."""
 
+import random
+
 
 class Matrix(object):
     """Make the grid."""
@@ -24,8 +26,9 @@ class Matrix(object):
 class Bug(object):
     """Make a bug."""
 
-    def __init__(self):
+    def __init__(self, id):
         """."""
+        self.id = id
         self.position = None
         self.moving = False
         self.direction = ''
@@ -34,10 +37,14 @@ class Bug(object):
 
 def start(bugs=2, size='small'):
     """."""
-    pass
+    grid = Matrix(size)
+    for bug in range(bugs):
+        rand_idx = random.randint(0, len(grid.mtx))
+        grid.mtx[rand_idx][rand_idx].append(Bug(bug))
+    return grid
 
 
 if __name__ == '__main__':
-    res = Matrix(10)
+    res = start()
     for item in res.mtx:
         print(item, '\n')
