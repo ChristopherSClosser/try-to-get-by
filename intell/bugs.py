@@ -54,23 +54,29 @@ class Bug(object):
         self.idx = []
         for subarray in self.mtx:
             if [self.id] in subarray:
-                self.idx.append((self.mtx.index(subarray), subarray.index([self.id])))
-        pass
+                self.idx.append([
+                    self.mtx.index(subarray),
+                    subarray.index([self.id])
+                ])
 
 
 def start(bugs=2, size='small'):
-    """."""
+    """Init matrix and bugs."""
     grid = Matrix(size)
     for bug in range(bugs):
-        rand_idx = random.randint(0, len(grid.mtx))
+        rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+        rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
+        while grid.mtx[rand_idx1][rand_idx2]:
+            rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+            rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
         new = Bug(bug)
-        grid.mtx[rand_idx][rand_idx].append(new.id)
+        grid.mtx[rand_idx1][rand_idx2].append(new.id)
+        grid._bugs.append(new)
         new.location(grid.mtx)
-        import pdb; pdb.set_trace()
     return grid
 
 
-if __name__ == '__main__':
-    res = start()
+if __name__ == '__main__':  # pragma no cover
+    res = start(size=5)
     for item in res.mtx:
         print(item, '\n')
