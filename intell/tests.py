@@ -1,7 +1,5 @@
 """Test intell."""
 
-import pytest
-
 from django.test import TestCase
 
 from getby.views import HomeView
@@ -16,6 +14,7 @@ class ProfileTestCase(TestCase):
         """."""
         self.std_mtx = bugs.Matrix()
         self.md_mtx = bugs.Matrix(5)
+        self.std_start = bugs.start()
 
     def test_home_view_has_title(self):
         """."""
@@ -56,3 +55,26 @@ class ProfileTestCase(TestCase):
             [[], [], [], [], []],
             [[], [], [], [], []],
         ]
+
+    def test_std_start_bug(self):
+        """."""
+        for _ in range(20):
+            std_start = bugs.start()
+            assert std_start._bugs[0].id == 1
+
+    def test_start_size_2_bug_index(self):
+        """."""
+        for _ in range(20):
+            strt = bugs.start(size=2)
+            assert strt._bugs[1].id == 2
+
+    # def test_bugs_index_1(self):
+    #     """."""
+    #     res = []
+    #     bug =
+    #     for subarray in self.std_start.mtx:
+    #         for item in subarray:
+    #             if len(item) > 0:
+    #                 res.append(subarray.index(item))
+    #     import pdb; pdb.set_trace()
+    #     assert self.std_start._bugs[0].idx == res

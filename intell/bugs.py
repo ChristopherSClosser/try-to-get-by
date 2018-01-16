@@ -69,7 +69,7 @@ def start(bugs=2, size='small'):
         while grid.mtx[rand_idx1][rand_idx2]:
             rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
             rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        new = Bug(bug)
+        new = Bug(bug + 1)
         grid.mtx[rand_idx1][rand_idx2].append(new.id)
         grid._bugs.append(new)
         new.location(grid.mtx)
