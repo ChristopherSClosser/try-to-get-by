@@ -68,13 +68,26 @@ class ProfileTestCase(TestCase):
             strt = bugs.start(size=2)
             assert strt._bugs[1].id == 2
 
-    # def test_bugs_index_1(self):
-    #     """."""
-    #     res = []
-    #     bug =
-    #     for subarray in self.std_start.mtx:
-    #         for item in subarray:
-    #             if len(item) > 0:
-    #                 res.append(subarray.index(item))
-    #     import pdb; pdb.set_trace()
-    #     assert self.std_start._bugs[0].idx == res
+    def test_matrix_bug_list(self):
+        """."""
+        res = self.std_start._bugs
+        assert len(res) == 2
+
+    def test_bug_idx(self):
+        """."""
+        strt = bugs.start(size=2)
+        mtx = strt
+        idx = []
+        for subarray in mtx.mtx:
+            if [1] in subarray:
+                idx.append([
+                    mtx.mtx.index(subarray),
+                    subarray.index([1])
+                ])
+            # if [2] in subarray:
+            #     idx.append([
+            #         mtx.mtx.index(subarray),
+            #         subarray.index([2])
+            #     ])
+            
+        import pdb; pdb.set_trace()

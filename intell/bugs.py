@@ -77,6 +77,6 @@ def start(bugs=2, size='small'):
 
 
 if __name__ == '__main__':  # pragma no cover
-    res = start(size=5)
+    res = start(size=15)
     for item in res.mtx:
         print(item, '\n')
