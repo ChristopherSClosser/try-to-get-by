@@ -74,6 +74,8 @@ def start(bugs=2, size='small'):
     Of course bugs will be randomly placed.
     """
     grid = Matrix(size)
+    if bugs > len(grid.mtx) / 2:
+        grid = Matrix(bugs * 2)
     for bug in range(bugs):
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))

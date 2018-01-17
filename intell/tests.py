@@ -79,6 +79,17 @@ class ProfileTestCase(TestCase):
         res = mtx._bugs
         assert len(res) == 4
 
+    def test_matrix_lots_o_bugs_list(self):
+        """."""
+        mtx = bugs.start(bugs=10)
+        res = mtx._bugs
+        assert len(res) == 10
+
+    def test_matrix_lots_o_bugs_resizes_matrix(self):
+        """."""
+        mtx = bugs.start(bugs=9)
+        assert len(mtx.mtx) == 18
+
     def test_bug_idx_2x2(self):
         """."""
         mtx = bugs.start(size=2)
