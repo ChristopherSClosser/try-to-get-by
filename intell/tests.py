@@ -84,10 +84,3 @@ class ProfileTestCase(TestCase):
                     mtx.mtx.index(subarray),
                     subarray.index([1])
                 ])
-            # if [2] in subarray:
-            #     idx.append([
-            #         mtx.mtx.index(subarray),
-            #         subarray.index([2])
-            #     ])
-            
-        import pdb; pdb.set_trace()
