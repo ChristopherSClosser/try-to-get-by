@@ -29,10 +29,8 @@ class Bug(object):
     def __init__(self, id):
         """Set defaults."""
         self.id = id
-        self.position = None
         self.moving = False
         self.directions = []
-        self.space = None
 
     def Move(self, mtx):  # pragma no cover
         """
@@ -49,7 +47,7 @@ class Bug(object):
         """
         pass
 
-    def location(self, mtx):
+    def _location(self, mtx):
         """Location of bug in matrix."""
         self.mtx = mtx
         self.idx = []
@@ -59,6 +57,21 @@ class Bug(object):
                     self.mtx.index(subarray),
                     subarray.index([self])
                 ])
+
+    def _directions(self, mtx):
+        """Given the matrix find available directions to travel."""
+        idx = self.idx[0]
+        if idx == [0, 0]:
+            if (
+              len(mtx.mtx[idx[0]][idx[1] + 1]) == 0  # <<<< keep in mind
+              and len(mtx.mtx[1][0]) == 0
+              and len(mtx.mtx[1][1]) == 0
+            ):
+                self.directions.append(
+                    [0, 1],
+                    [1, 0]
+                )
+        pass
 
 
 def start(bugs=2, size='small'):
@@ -85,7 +98,7 @@ def start(bugs=2, size='small'):
         new = Bug(bug + 1)
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
-        new.location(grid.mtx)
+        new._location(grid.mtx)
     return grid
 
 
