@@ -56,6 +56,12 @@ class ProfileTestCase(TestCase):
             [[], [], [], [], []],
         ]
 
+    def test_matrix_one_bug(self):
+        """."""
+        mtx = bugs.start(bugs=1)
+        res = mtx._bugs
+        assert len(res) == 1
+
     def test_std_start_bug(self):
         """."""
         for _ in range(20):
