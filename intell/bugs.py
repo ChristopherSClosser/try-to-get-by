@@ -61,16 +61,18 @@ class Bug(object):
     def _directions(self, mtx):
         """Given the matrix find available directions to travel."""
         idx = self.idx[0]
-        try:
-            if len(mtx[idx[0]][idx[1] + 1]) == 0:
-                self.directions.append([idx[0]][idx[1] + 1])  # <<<< keep in mind
-            if len(mtx[idx[0] + 1][idx[0]]) == 0:
-                self.directions.append([idx[0] + 1][idx[0]])
-            if len(mtx[idx[0] + 1][idx[0] + 1]) == 0:
-                self.directions.append([idx[0] + 1][idx[0] + 1])
-        except:
-            pass
+        while True:
+            try:
+                if len(mtx[idx[0]][idx[1] + 1]) == 0:
+                    self.directions.append([idx[0]][idx[1] + 1])  # <<<< keep in mind
+                if len(mtx[idx[0] + 1][idx[0]]) == 0:
+                    self.directions.append([idx[0] + 1][idx[0]])
+                if len(mtx[idx[0] + 1][idx[0] + 1]) == 0:
+                    self.directions.append([idx[0] + 1][idx[0] + 1])
+            except IndexError:
+                continue
         import pdb; pdb.set_trace()
+
 
 def start(bugs=2, size='small'):
     """
