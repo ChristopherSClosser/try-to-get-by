@@ -61,18 +61,16 @@ class Bug(object):
     def _directions(self, mtx):
         """Given the matrix find available directions to travel."""
         idx = self.idx[0]
-        if idx == [0, 0]:
-            if (
-              len(mtx.mtx[idx[0]][idx[1] + 1]) == 0  # <<<< keep in mind
-              and len(mtx.mtx[1][0]) == 0
-              and len(mtx.mtx[1][1]) == 0
-            ):
-                self.directions.append(
-                    [0, 1],
-                    [1, 0]
-                )
-        pass
-
+        try:
+            if len(mtx[idx[0]][idx[1] + 1]) == 0:
+                self.directions.append([idx[0]][idx[1] + 1])  # <<<< keep in mind
+            if len(mtx[idx[0] + 1][idx[0]]) == 0:
+                self.directions.append([idx[0] + 1][idx[0]])
+            if len(mtx[idx[0] + 1][idx[0] + 1]) == 0:
+                self.directions.append([idx[0] + 1][idx[0] + 1])
+        except:
+            pass
+        import pdb; pdb.set_trace()
 
 def start(bugs=2, size='small'):
     """
@@ -99,6 +97,7 @@ def start(bugs=2, size='small'):
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
         new._location(grid.mtx)
+        new._directions(grid.mtx)
     return grid
 
 
