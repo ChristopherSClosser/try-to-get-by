@@ -56,25 +56,102 @@ class ProfileTestCase(TestCase):
             [[], [], [], [], []],
         ]
 
+    def test_matrix_one_bug(self):
+        """."""
+        mtx = bugs.start(bugs=1)
+        res = mtx._bugs
+        assert len(res) == 1
+
     def test_std_start_bug(self):
         """."""
         for _ in range(20):
             std_start = bugs.start()
-            assert std_start._bugs[0].id == 1
+            assert std_start._bugs[0][0] == 1
 
     def test_start_size_2_bug_index(self):
         """."""
         for _ in range(20):
             strt = bugs.start(size=2)
-            assert strt._bugs[1].id == 2
+            assert strt._bugs[1][0] == 2
 
-    # def test_bugs_index_1(self):
-    #     """."""
-    #     res = []
-    #     bug =
-    #     for subarray in self.std_start.mtx:
-    #         for item in subarray:
-    #             if len(item) > 0:
-    #                 res.append(subarray.index(item))
-    #     import pdb; pdb.set_trace()
-    #     assert self.std_start._bugs[0].idx == res
+    def test_matrix_standard_bug_list(self):
+        """."""
+        res = self.std_start._bugs
+        assert len(res) == 2
+
+    def test_matrix_more_bugs_list(self):
+        """."""
+        mtx = bugs.start(bugs=4)
+        res = mtx._bugs
+        assert len(res) == 4
+
+    def test_matrix_lots_o_bugs_list(self):
+        """."""
+        mtx = bugs.start(bugs=10)
+        res = mtx._bugs
+        assert len(res) == 10
+
+    def test_matrix_lots_o_bugs_resizes_matrix(self):
+        """."""
+        mtx = bugs.start(bugs=9)
+        assert len(mtx.mtx) == 18
+
+    def test_bug_idx_2x2(self):
+        """."""
+        mtx = bugs.start(size=2)
+        idx = []
+        res = []
+        for subarray in mtx.mtx:
+            for i in range(len(subarray)):
+                try:
+                    if subarray[i][0]:
+                        idx.append([
+                            mtx.mtx.index(subarray),
+                            i
+                        ])
+                except IndexError:
+                    continue
+        for bug in mtx._bugs:
+            res.append(bug[1].idx[0])
+        res = sorted(res)
+        assert idx == res
+
+    def test_bug_idx_small(self):
+        """."""
+        mtx = bugs.start()
+        idx = []
+        res = []
+        for subarray in mtx.mtx:
+            for i in range(len(subarray)):
+                try:
+                    if subarray[i][0]:
+                        idx.append([
+                            mtx.mtx.index(subarray),
+                            i
+                        ])
+                except IndexError:
+                    continue
+        for bug in mtx._bugs:
+            res.append(bug[1].idx[0])
+        res = sorted(res)
+        assert idx == res
+
+    def test_bug_idx_larger(self):
+        """."""
+        mtx = bugs.start(size=10)
+        idx = []
+        res = []
+        for subarray in mtx.mtx:
+            for i in range(len(subarray)):
+                try:
+                    if subarray[i][0]:
+                        idx.append([
+                            mtx.mtx.index(subarray),
+                            i
+                        ])
+                except IndexError:
+                    continue
+        for bug in mtx._bugs:
+            res.append(bug[1].idx[0])
+        res = sorted(res)
+        assert idx == res

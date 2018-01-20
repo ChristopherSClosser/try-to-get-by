@@ -29,12 +29,10 @@ class Bug(object):
     def __init__(self, id):
         """Set defaults."""
         self.id = id
-        self.position = None
         self.moving = False
         self.directions = []
-        self.space = None
 
-    def Move(self, mtx):
+    def Move(self, mtx):  # pragma no cover
         """
         Determine how bug is to perform.
 
@@ -42,27 +40,69 @@ class Bug(object):
         Bug needs to know where it can move ie. N, NE, E, SE, S, SW, W, NW
         ...cannot move in negative index direction
         [
-            [[], [], []],  >if bug1 is @ mtx[0][0] - directions = [E, SE, S]
-            [[], [], []],   if bug2 @ mtx[0][1] bug1 directions = [SE, S] ect..
-            [[], [], []],  >if bug1 is @ mtx[0][2] - directions = [W, SW, S]
-        ]                   if bug2 @ mtx[0][1] bug1 directions = [SW, S] ect..
+          [[], [], []],  > if bug1 is @ mtx[0][0] - directions = [E, SE, S]
+          [[], [], []],    if bug2 @ mtx[0][1] bug1 directions = [SE, S] ect..
+          [[], [], []],  > if bug1 is @ mtx[0][2] - directions = [W, SW, S]
+        ]                  if bug2 @ mtx[0][1] bug1 directions = [SW, S] ect..
         """
+        pass
 
-    def location(self, mtx):
+    def _location(self, mtx):
         """Location of bug in matrix."""
         self.mtx = mtx
         self.idx = []
-        for subarray in self.mtx:
-            if [self.id] in subarray:
+        for subarray in self.mtx.mtx:
+            if [self] in subarray:
                 self.idx.append([
-                    self.mtx.index(subarray),
-                    subarray.index([self.id])
+                    self.mtx.mtx.index(subarray),
+                    subarray.index([self])
                 ])
+
+    def _directions(self):
+        """Given the matrix find available directions to travel."""
+        mtx = self.mtx.mtx
+        for bug in self.mtx._bugs:
+            x = bug[1].idx[0][0]
+            y = bug[1].idx[0][1]
+            try:
+                if len(mtx[x][y + 1]) == 0:
+                    bug[1].directions.append([x, y + 1])
+                if len(mtx[x + 1][y]) == 0:
+                    bug[1].directions.append([x + 1, y])
+                if len(mtx[x + 1][y + 1]) == 0:
+                    bug[1].directions.append([x + 1, y + 1])
+                if x > 0:
+                    if len(mtx[x - 1][y + 1]) == 0:
+                        bug[1].directions.append([x - 1, y + 1])
+                    if len(mtx[x - 1][y]) == 0:
+                        bug[1].directions.append([x - 1, y])
+                if y > 0:
+                    if len(mtx[x + 1][y - 1]) == 0:
+                        bug[1].directions.append([x + 1, y - 1])
+                    if len(mtx[x][y - 1]) == 0:
+                        bug[1].directions.append([x, y - 1])
+                if x > 0 and y > 0:
+                    if len(mtx[x - 1][y - 1]) == 0:
+                        bug[1].directions.append([x - 1, y - 1])
+            except:
+                pass
 
 
 def start(bugs=2, size='small'):
-    """Init matrix and bugs."""
+    """
+    Init matrix and bugs.
+
+    A default matrix will look like this...
+    [
+      [[<intell.bugs.Bug object at 0x7f420e2e1c88>], [], []],
+      [[<intell.bugs.Bug object at 0x7f420e2e1160>], [], []],
+                                                [[], [], []]
+    ]
+    Of course bugs will be randomly placed.
+    """
     grid = Matrix(size)
+    if bugs > len(grid.mtx) / 2:
+        grid = Matrix(bugs * 2)
     for bug in range(bugs):
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
@@ -70,13 +110,14 @@ def start(bugs=2, size='small'):
             rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
             rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
         new = Bug(bug + 1)
-        grid.mtx[rand_idx1][rand_idx2].append(new.id)
-        grid._bugs.append(new)
-        new.location(grid.mtx)
+        grid.mtx[rand_idx1][rand_idx2].append(new)
+        grid._bugs.append((new.id, new))
+        new._location(grid)
+    new._directions()
     return grid
 
 
 if __name__ == '__main__':  # pragma no cover
-    res = start(size=5)
+    res = start(size=15)
     for item in res.mtx:
         print(item, '\n')
