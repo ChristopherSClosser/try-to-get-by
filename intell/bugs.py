@@ -50,42 +50,62 @@ class Bug(object):
     def _location(self, mtx):
         """Location of bug in matrix."""
         self.mtx = mtx
-        self.idx = []
+        self.idx = {}  # think about making a dict
         for subarray in self.mtx.mtx:
             if [self] in subarray:
-                self.idx.append([
-                    self.mtx.mtx.index(subarray),
-                    subarray.index([self])
-                ])
+                self.idx['x'] = self.mtx.mtx.index(subarray)
+                self.idx['y'] = subarray.index([self])
 
     def _directions(self):
         """Given the matrix find available directions to travel."""
         mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
-            x = bug[1].idx[0][0]
-            y = bug[1].idx[0][1]
+            x = bug[1].idx['x']
+            y = bug[1].idx['y']
             try:
                 if len(mtx[x][y + 1]) == 0:
                     bug[1].directions.append([x, y + 1])
-                if len(mtx[x + 1][y]) == 0:
-                    bug[1].directions.append([x + 1, y])
-                if len(mtx[x + 1][y + 1]) == 0:
-                    bug[1].directions.append([x + 1, y + 1])
-                if x > 0:
-                    if len(mtx[x - 1][y + 1]) == 0:
-                        bug[1].directions.append([x - 1, y + 1])
-                    if len(mtx[x - 1][y]) == 0:
-                        bug[1].directions.append([x - 1, y])
-                if y > 0:
-                    if len(mtx[x + 1][y - 1]) == 0:
-                        bug[1].directions.append([x + 1, y - 1])
-                    if len(mtx[x][y - 1]) == 0:
-                        bug[1].directions.append([x, y - 1])
-                if x > 0 and y > 0:
-                    if len(mtx[x - 1][y - 1]) == 0:
-                        bug[1].directions.append([x - 1, y - 1])
             except:
                 pass
+            try:
+                if len(mtx[x + 1][y]) == 0:
+                    bug[1].directions.append([x + 1, y])
+            except:
+                pass
+            try:
+                if len(mtx[x + 1][y + 1]) == 0:
+                    bug[1].directions.append([x + 1, y + 1])
+            except:
+                pass
+            if x > 0:
+                try:
+                    if len(mtx[x - 1][y + 1]) == 0:
+                        bug[1].directions.append([x - 1, y + 1])
+                except:
+                    pass
+                try:
+                    if len(mtx[x - 1][y]) == 0:
+                        bug[1].directions.append([x - 1, y])
+                except:
+                    pass
+            if y > 0:
+                try:
+                    if len(mtx[x + 1][y - 1]) == 0:
+                        bug[1].directions.append([x + 1, y - 1])
+                except:
+                    pass
+                try:
+                    if len(mtx[x][y - 1]) == 0:
+                        bug[1].directions.append([x, y - 1])
+                except:
+                    pass
+            if x > 0 and y > 0:
+                try:
+                    if len(mtx[x - 1][y - 1]) == 0:
+                        bug[1].directions.append([x - 1, y - 1])
+                except:
+                    pass
+        import pdb; pdb.set_trace()
 
 
 def start(bugs=2, size='small'):

@@ -107,7 +107,7 @@ class ProfileTestCase(TestCase):
                     if subarray[i][0]:
                         idx.append([
                             mtx.mtx.index(subarray),
-                            i
+                            i,
                         ])
                 except IndexError:
                     continue
@@ -127,7 +127,7 @@ class ProfileTestCase(TestCase):
                     if subarray[i][0]:
                         idx.append([
                             mtx.mtx.index(subarray),
-                            i
+                            i,
                         ])
                 except IndexError:
                     continue
@@ -147,7 +147,7 @@ class ProfileTestCase(TestCase):
                     if subarray[i][0]:
                         idx.append([
                             mtx.mtx.index(subarray),
-                            i
+                            i,
                         ])
                 except IndexError:
                     continue
