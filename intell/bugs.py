@@ -51,26 +51,28 @@ class Bug(object):
         """Location of bug in matrix."""
         self.mtx = mtx
         self.idx = []
-        for subarray in self.mtx:
+        for subarray in self.mtx.mtx:
             if [self] in subarray:
                 self.idx.append([
-                    self.mtx.index(subarray),
+                    self.mtx.mtx.index(subarray),
                     subarray.index([self])
                 ])
 
     def _directions(self, mtx):
         """Given the matrix find available directions to travel."""
-        idx = self.idx[0]
-        try:
-            import pdb; pdb.set_trace()
-            if mtx[idx[0]][idx[1] + 1] and len(mtx[idx[0]][idx[1] + 1]) == 0:
-                self.directions.append(([idx[0]], [idx[1] + 1]))  # <<<< keep in mind
-            if mtx[idx[0] + 1][idx[0]] and len(mtx[idx[0] + 1][idx[0]]) == 0:
-                self.directions.append([idx[0] + 1][idx[0]])
-            if mtx[idx[0] + 1][idx[0] + 1] and len(mtx[idx[0] + 1][idx[0] + 1]) == 0:
-                self.directions.append([idx[0] + 1][idx[0] + 1])
-        except:
-            pass
+        for bug in self.mtx._bugs:
+            x = bug[1].idx[0][0]
+            y = bug[1].idx[0][1]
+            try:
+                if len(mtx[x][y + 1]) == 0:
+                    bug[1].directions.append([x, y + 1])
+                if len(mtx[x + 1][y]) == 0:
+                    bug[1].directions.append([x + 1, y])
+                if len(mtx[x + 1][y + 1]) == 0:
+                    bug[1].directions.append([x + 1, y + 1])
+            except:
+                pass
+        import pdb; pdb.set_trace()
 
 
 def start(bugs=2, size='small'):
@@ -97,8 +99,8 @@ def start(bugs=2, size='small'):
         new = Bug(bug + 1)
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
-        new._location(grid.mtx)
-        new._directions(grid.mtx)
+        new._location(grid)
+    new._directions(grid.mtx)
     return grid
 
 
