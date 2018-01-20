@@ -58,8 +58,9 @@ class Bug(object):
                     subarray.index([self])
                 ])
 
-    def _directions(self, mtx):
+    def _directions(self):
         """Given the matrix find available directions to travel."""
+        mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
             x = bug[1].idx[0][0]
             y = bug[1].idx[0][1]
@@ -70,9 +71,21 @@ class Bug(object):
                     bug[1].directions.append([x + 1, y])
                 if len(mtx[x + 1][y + 1]) == 0:
                     bug[1].directions.append([x + 1, y + 1])
+                if x > 0:
+                    if len(mtx[x - 1][y + 1]) == 0:
+                        bug[1].directions.append([x - 1, y + 1])
+                    if len(mtx[x - 1][y]) == 0:
+                        bug[1].directions.append([x - 1, y])
+                if y > 0:
+                    if len(mtx[x + 1][y - 1]) == 0:
+                        bug[1].directions.append([x + 1, y - 1])
+                    if len(mtx[x][y - 1]) == 0:
+                        bug[1].directions.append([x, y - 1])
+                if x > 0 and y > 0:
+                    if len(mtx[x - 1][y - 1]) == 0:
+                        bug[1].directions.append([x - 1, y - 1])
             except:
                 pass
-        import pdb; pdb.set_trace()
 
 
 def start(bugs=2, size='small'):
@@ -100,7 +113,7 @@ def start(bugs=2, size='small'):
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
         new._location(grid)
-    new._directions(grid.mtx)
+    new._directions()
     return grid
 
 
