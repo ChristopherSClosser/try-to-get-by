@@ -46,6 +46,37 @@ class ProfileTestCase(TestCase):
         """."""
         assert self.md_mtx._size == 5
 
+    def test_bug_directions_0_0(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[0][0].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert new.directions == [[0, 1], [1, 0], [1, 1]]
+
+    def test_bug_directions_0_2(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[0][2].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [[0, 1], [1, 1], [1, 2]]
+
+    def test_bug_directions_1_1(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[1][1].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [
+            [0, 0], [0, 1], [0, 2], [1, 0],
+            [1, 2], [2, 0], [2, 1], [2, 2],
+        ]
+        assert [1, 1] not in new.directions
+
     def test_md_matrix_init_marix(self):
         """."""
         assert self.md_mtx.mtx == [

@@ -3,6 +3,7 @@
 import random
 import math
 
+
 class Matrix(object):
     """Make the grid."""
 
