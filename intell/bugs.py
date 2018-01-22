@@ -33,7 +33,7 @@ class Bug(object):
         self.moving = False
         self.directions = []
 
-    def Move(self, mtx):  # pragma no cover
+    def _move(self, mtx):  # pragma no cover
         """
         Determine how bug is to perform.
 
@@ -49,7 +49,12 @@ class Bug(object):
         pass
 
     def _location(self, mtx):
-        """Location of bug in matrix."""
+        """
+        Location of bug in matrix.
+
+        Gives bug the reference of Matrix object in which it lives.
+        Initiated by start(no. of bugs, size of matrix)...
+        """
         self.mtx = mtx
         self.idx = {}
         for subarray in self.mtx.mtx:
@@ -58,9 +63,16 @@ class Bug(object):
                 self.idx['y'] = subarray.index([self])
 
     def _directions(self):
-        """Given the matrix find available directions to travel."""
+        """
+        Given the matrix find available directions to travel.
+
+        Each time all bugs get new directions.
+        First initiated by start...
+        """
         mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
+            # clear any previous directions
+            bug[1].directions = []
             x = bug[1].idx['x']
             y = bug[1].idx['y']
             try:  # seems everything needs a try...
