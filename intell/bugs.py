@@ -1,7 +1,7 @@
 """Intelligent bugs."""
 
 import random
-
+import math
 
 class Matrix(object):
     """Make the grid."""
@@ -50,42 +50,52 @@ class Bug(object):
     def _location(self, mtx):
         """Location of bug in matrix."""
         self.mtx = mtx
-        self.idx = []
+        self.idx = {}
         for subarray in self.mtx.mtx:
             if [self] in subarray:
-                self.idx.append([
-                    self.mtx.mtx.index(subarray),
-                    subarray.index([self])
-                ])
+                self.idx['x'] = self.mtx.mtx.index(subarray)
+                self.idx['y'] = subarray.index([self])
 
     def _directions(self):
         """Given the matrix find available directions to travel."""
         mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
-            x = bug[1].idx[0][0]
-            y = bug[1].idx[0][1]
-            try:
+            x = bug[1].idx['x']
+            y = bug[1].idx['y']
+            try:  # seems everything needs a try...
                 if len(mtx[x][y + 1]) == 0:
                     bug[1].directions.append([x, y + 1])
+            except IndexError:
+                pass
+            try:
                 if len(mtx[x + 1][y]) == 0:
                     bug[1].directions.append([x + 1, y])
+            except IndexError:
+                pass
+            try:
                 if len(mtx[x + 1][y + 1]) == 0:
                     bug[1].directions.append([x + 1, y + 1])
-                if x > 0:
+            except IndexError:
+                pass
+            if x > 0:
+                try:
                     if len(mtx[x - 1][y + 1]) == 0:
                         bug[1].directions.append([x - 1, y + 1])
-                    if len(mtx[x - 1][y]) == 0:
-                        bug[1].directions.append([x - 1, y])
-                if y > 0:
+                except IndexError:
+                    pass
+                if len(mtx[x - 1][y]) == 0:
+                    bug[1].directions.append([x - 1, y])
+            if y > 0:
+                try:
                     if len(mtx[x + 1][y - 1]) == 0:
                         bug[1].directions.append([x + 1, y - 1])
-                    if len(mtx[x][y - 1]) == 0:
-                        bug[1].directions.append([x, y - 1])
-                if x > 0 and y > 0:
-                    if len(mtx[x - 1][y - 1]) == 0:
-                        bug[1].directions.append([x - 1, y - 1])
-            except:
-                pass
+                except IndexError:
+                    pass
+                if len(mtx[x][y - 1]) == 0:
+                    bug[1].directions.append([x, y - 1])
+            if x > 0 and y > 0:
+                if len(mtx[x - 1][y - 1]) == 0:
+                    bug[1].directions.append([x - 1, y - 1])
 
 
 def start(bugs=2, size='small'):
@@ -98,11 +108,13 @@ def start(bugs=2, size='small'):
       [[<intell.bugs.Bug object at 0x7f420e2e1160>], [], []],
                                                 [[], [], []]
     ]
-    Of course bugs will be randomly placed.
+    Bugs will be randomly placed.
     """
     grid = Matrix(size)
-    if bugs > len(grid.mtx) / 2:
-        grid = Matrix(bugs * 2)
+    mtx_size = len(grid.mtx) * len(grid.mtx)
+    if bugs > int(math.ceil(mtx_size)) / 3:
+        x = int(math.ceil((bugs * 3) ** (0.5)))
+        grid = Matrix(x)
     for bug in range(bugs):
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
@@ -112,8 +124,8 @@ def start(bugs=2, size='small'):
         new = Bug(bug + 1)
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
-        new._location(grid)
-    new._directions()
+        new._location(grid)  # get index of bug
+    new._directions()  # get available directions bug can go
     return grid
 
 
