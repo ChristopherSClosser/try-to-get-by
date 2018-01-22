@@ -55,6 +55,31 @@ class ProfileTestCase(TestCase):
         new._directions()
         assert new.directions == [[0, 1], [1, 0], [1, 1]]
 
+    def test_bug_directions_bug1_00_bug2_11(self):
+        """."""
+        bug1 = bugs.Bug(1)
+        self.std_mtx.mtx[0][0].append(bug1)
+        self.std_mtx._bugs.append((bug1.id, bug1))
+        bug1._location(self.std_mtx)
+        bug2 = bugs.Bug(2)
+        self.std_mtx.mtx[1][1].append(bug2)
+        self.std_mtx._bugs.append((bug2.id, bug2))
+        bug2._location(self.std_mtx)
+        bug2._directions()
+        assert [0, 0] not in bug2.directions
+        assert [1, 1] not in bug1.directions
+
+    def test_bug_directions_0_1(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[0][1].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [
+            [0, 0], [0, 2], [1, 0], [1, 1], [1, 2]
+        ]
+
     def test_bug_directions_0_2(self):
         """."""
         new = bugs.Bug(1)
@@ -63,6 +88,17 @@ class ProfileTestCase(TestCase):
         new._location(self.std_mtx)
         new._directions()
         assert sorted(new.directions) == [[0, 1], [1, 1], [1, 2]]
+
+    def test_bug_directions_1_0(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[1][0].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [
+            [0, 0], [0, 1], [1, 1], [2, 0], [2, 1]
+        ]
 
     def test_bug_directions_1_1(self):
         """."""
@@ -76,6 +112,46 @@ class ProfileTestCase(TestCase):
             [1, 2], [2, 0], [2, 1], [2, 2],
         ]
         assert [1, 1] not in new.directions
+
+    def test_bug_directions_1_2(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[1][2].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [
+            [0, 1], [0, 2], [1, 1], [2, 1], [2, 2]
+        ]
+
+    def test_bug_directions_2_0(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[2][0].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [[1, 0], [1, 1], [2, 1]]
+
+    def test_bug_directions_2_1(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[2][1].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [
+            [1, 0], [1, 1], [1, 2], [2, 0], [2, 2]
+        ]
+
+    def test_bug_directions_2_2(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[2][2].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        assert sorted(new.directions) == [[1, 1], [1, 2], [2, 1]]
 
     def test_md_matrix_init_marix(self):
         """."""
