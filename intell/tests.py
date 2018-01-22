@@ -64,13 +64,19 @@ class ProfileTestCase(TestCase):
 
     def test_std_start_bug(self):
         """."""
-        for _ in range(20):
+        for _ in range(200):
             std_start = bugs.start()
             assert std_start._bugs[0][0] == 1
 
+    def test_start_lots_o_times(self):
+        """."""
+        for _ in range(200):
+            strt = bugs.start(bugs=15, size=10)
+            assert len(strt.mtx) == 10
+
     def test_start_size_2_bug_index(self):
         """."""
-        for _ in range(20):
+        for _ in range(200):
             strt = bugs.start(size=2)
             assert strt._bugs[1][0] == 2
 
@@ -91,10 +97,21 @@ class ProfileTestCase(TestCase):
         res = mtx._bugs
         assert len(res) == 10
 
+    def test_matrix_tons_o_bugs_martix(self):
+        """."""
+        mtx = bugs.start(bugs=100)
+        res = mtx.mtx
+        assert len(res) == 18
+
+    def test_matrix_lots_o_bugs_no_resize_matrix(self):
+        """."""
+        mtx = bugs.start(bugs=5, size=4)
+        assert len(mtx.mtx) == 4
+
     def test_matrix_lots_o_bugs_resizes_matrix(self):
         """."""
         mtx = bugs.start(bugs=9)
-        assert len(mtx.mtx) == 18
+        assert len(mtx.mtx) == 6
 
     def test_bug_idx_2x2(self):
         """."""
@@ -112,7 +129,10 @@ class ProfileTestCase(TestCase):
                 except IndexError:
                     continue
         for bug in mtx._bugs:
-            res.append(bug[1].idx[0])
+            res.append([
+                bug[1].idx['x'],
+                bug[1].idx['y'],
+            ])
         res = sorted(res)
         assert idx == res
 
@@ -132,7 +152,10 @@ class ProfileTestCase(TestCase):
                 except IndexError:
                     continue
         for bug in mtx._bugs:
-            res.append(bug[1].idx[0])
+            res.append([
+                bug[1].idx['x'],
+                bug[1].idx['y'],
+            ])
         res = sorted(res)
         assert idx == res
 
@@ -152,6 +175,9 @@ class ProfileTestCase(TestCase):
                 except IndexError:
                     continue
         for bug in mtx._bugs:
-            res.append(bug[1].idx[0])
+            res.append([
+                bug[1].idx['x'],
+                bug[1].idx['y'],
+            ])
         res = sorted(res)
         assert idx == res
