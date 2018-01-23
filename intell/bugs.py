@@ -33,7 +33,7 @@ class Bug(object):
         self.moving = False
         self.directions = []
 
-    def _move(self, mtx):  # pragma no cover
+    def _move(self):  # pragma no cover
         """
         Determine how bug is to perform.
 
@@ -135,7 +135,7 @@ def start(bugs=2, size='small'):
     [
       [[<intell.bugs.Bug object at 0x7f420e2e1c88>], [], []],
       [[<intell.bugs.Bug object at 0x7f420e2e1160>], [], []],
-                                                [[], [], []]
+                                                [[], [], []],
     ]
     Bugs will be randomly placed.
     """
@@ -154,7 +154,7 @@ def start(bugs=2, size='small'):
         grid.mtx[rand_idx1][rand_idx2].append(new)
         grid._bugs.append((new.id, new))
         new._location(grid)  # get index of bug
-    new._directions()  # get available directions bug can go
+    new._directions()  # get available directions all bugs can go
     return grid
 
 
