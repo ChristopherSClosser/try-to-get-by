@@ -7,5 +7,5 @@ from .bugs import start
 
 def index(request):
     """."""
-    mtx = start()
+    mtx = start(size=10)
     return render(request, 'getby/matrix.html', {'matrix': mtx.mtx})
