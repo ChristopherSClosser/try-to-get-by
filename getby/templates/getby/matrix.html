@@ -1,0 +1,29 @@
+{% extends 'getby/homepage.html' %}
+
+{% load static %}
+
+{% block title%}Matrix{% endblock %}
+
+{% block content %}
+<div class="container">
+  {% if matrix %}
+  {% for row in matrix %}
+    <div class="row">
+      {% for spot in row %}
+        <div class="">
+          {{ spot }}
+        </div>
+        <!-- {% if len(spot) > 0 %}
+          <div class="bug">
+            {{ spot[0].id }}
+          </div>
+        {% else %}
+          <div class="empty">
+
+          </div>
+        {% endif %} -->
+      {% end for %}
+    </div>
+  {% endfor %}
+  {% endif %}
+</div>
