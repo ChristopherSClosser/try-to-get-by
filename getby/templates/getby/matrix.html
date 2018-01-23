@@ -1,0 +1,27 @@
+{% extends 'getby/homepage.html' %}
+
+{% load static %}
+
+{% block title %}Matrix{% endblock %}
+
+{% block content %}
+<div class="container">
+  {% if matrix %}
+  {% for row in matrix %}
+    <div class="row" style="display: inline-block;">
+      {% for spot in row %}
+        {% if spot.0 %}
+          <div class="bug">
+            {{ spot.0.id }}
+          </div>
+        {% else %}
+          <div class="empty">
+            {{ spot }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}
