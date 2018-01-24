@@ -5,10 +5,10 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="display: -webkit-box;">
   {% if matrix %}
   {% for row in matrix %}
-    <div class="row" style="display: inline-block;">
+    <div class="row">
       {% for spot in row %}
         {% if spot.0 %}
           <div class="bug">
