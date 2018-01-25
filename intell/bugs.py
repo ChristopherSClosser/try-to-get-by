@@ -41,10 +41,18 @@ class Bug(object):
         Choose random index to move to
         """
         rand_idx = random.randint(0, (len(self.directions) - 1))
-        to_move = self.directions[rand_idx]
-        self.mtx.mtx.remove(self)
-        self.mtx.mtx[to_move[0]][to_move[1]].append(self)
+        move_to = self.directions[rand_idx]
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
+
+    # def _new_location(self):
+    #     """."""
+    #     for subarray in self.mtx.mtx:
+    #         if [self] in subarray:
+    #             self.idx['x'] = self.mtx.mtx.index(subarray)
+    #             self.idx['y'] = subarray.index([self])
 
     def _location(self, mtx):
         """
@@ -82,6 +90,7 @@ class Bug(object):
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
+        import pdb; pdb.set_trace()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""
