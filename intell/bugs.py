@@ -33,13 +33,18 @@ class Bug(object):
         self.moving = False
         self.directions = []
 
-    def _move(self):  # pragma no cover
+    def _move_random(self):  # pragma no cover
         """
         Determine how bug is to perform.
 
-        When called bug will be a part of the matrix passed in...
+        When called the matrix will be a part of the bug passed in...
+        Choose random index to move to
         """
-        pass
+        rand_idx = random.randint(0, (len(self.directions) - 1))
+        to_move = self.directions[rand_idx]
+        self.mtx.mtx.remove(self)
+        self.mtx.mtx[to_move[0]][to_move[1]].append(self)
+        self._directions()
 
     def _location(self, mtx):
         """
