@@ -58,7 +58,7 @@ class ProfileTestCase(TestCase):
         self.std_mtx._bugs.append((new.id, new))
         new._location(self.std_mtx)
         new._directions()
-        self.std_mtx._move_all_random()
+        new._move_all_random()
         idx = {'x': 0, 'y': 0}
         assert new.idx != idx
 
@@ -234,6 +234,7 @@ class ProfileTestCase(TestCase):
     def test_matrix_lots_o_bugs_resizes_matrix(self):
         """."""
         mtx = bugs.start(bugs=9)
+        import pdb; pdb.set_trace()
         assert len(mtx.mtx) == 6
 
     def test_bug_idx_2x2(self):
