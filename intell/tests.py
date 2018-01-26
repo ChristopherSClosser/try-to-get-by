@@ -21,10 +21,15 @@ class ProfileTestCase(TestCase):
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
 
+    def test_intell_view_200(self):
+        """."""
+        response = views.index(self)
+        assert response.status_code == 200
+
     def test_intell_view_has_title(self):
         """."""
         response = views.index(self)
-        # assert response.content == b"Hello, world. You're at the intell index."
+        assert b'<title>The start</title>' in response.content
 
     def test_std_matrix_init_bugs(self):
         """test_std_matrix_init_bugs."""
@@ -45,6 +50,17 @@ class ProfileTestCase(TestCase):
     def test_md_matrix_init_size(self):
         """."""
         assert self.md_mtx._size == 5
+
+    def test_mtx_move_all_random(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[0][0].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        self.std_mtx._move_all_random()
+        idx = {'x': 0, 'y': 0}
+        assert new.idx != idx
 
     def test_bug_directions_0_0(self):
         """."""

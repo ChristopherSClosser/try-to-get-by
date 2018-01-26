@@ -23,6 +23,11 @@ class Matrix(object):
                 for _ in range(_size):
                     self.mtx[i].append([])
 
+    def _move_all_random(self):
+        """For each bug call to move random."""
+        for bug in self._bugs:
+            bug[1]._move_random()
+
 
 class Bug(object):
     """Make a bug."""
@@ -33,13 +38,19 @@ class Bug(object):
         self.moving = False
         self.directions = []
 
-    def _move(self):  # pragma no cover
+    def _move_random(self):
         """
         Determine how bug is to perform.
 
-        When called bug will be a part of the matrix passed in...
+        When called the matrix will be a part of the bug passed in...
+        Choose random index to move to
         """
-        pass
+        rand_idx = random.randint(0, (len(self.directions) - 1))
+        move_to = self.directions[rand_idx]
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        self._directions()
 
     def _location(self, mtx):
         """
