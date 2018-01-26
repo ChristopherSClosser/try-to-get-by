@@ -51,6 +51,17 @@ class ProfileTestCase(TestCase):
         """."""
         assert self.md_mtx._size == 5
 
+    def test_mtx_move_all_random(self):
+        """."""
+        new = bugs.Bug(1)
+        self.std_mtx.mtx[0][0].append(new)
+        self.std_mtx._bugs.append((new.id, new))
+        new._location(self.std_mtx)
+        new._directions()
+        self.std_mtx._move_all_random()
+        idx = {'x': 0, 'y': 0}
+        assert new.idx != idx
+
     def test_bug_directions_0_0(self):
         """."""
         new = bugs.Bug(1)

@@ -23,6 +23,11 @@ class Matrix(object):
                 for _ in range(_size):
                     self.mtx[i].append([])
 
+    def _move_all_random(self):
+        """For each bug call to move random."""
+        for bug in self._bugs:
+            bug[1]._move_random()
+
 
 class Bug(object):
     """Make a bug."""
@@ -33,7 +38,7 @@ class Bug(object):
         self.moving = False
         self.directions = []
 
-    def _move_random(self):  # pragma no cover
+    def _move_random(self):
         """
         Determine how bug is to perform.
 
@@ -46,13 +51,6 @@ class Bug(object):
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
-
-    # def _new_location(self):
-    #     """."""
-    #     for subarray in self.mtx.mtx:
-    #         if [self] in subarray:
-    #             self.idx['x'] = self.mtx.mtx.index(subarray)
-    #             self.idx['y'] = subarray.index([self])
 
     def _location(self, mtx):
         """
@@ -90,7 +88,6 @@ class Bug(object):
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
-        import pdb; pdb.set_trace()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""
