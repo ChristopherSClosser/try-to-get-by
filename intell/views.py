@@ -1,11 +1,9 @@
 """."""
 
 from django.shortcuts import render
-from django.http import HttpResponse
 from .bugs import start
-from django.views.generic import TemplateView
 
-MTX = start(size=10)
+MTX = start(bugs=2, size=10)
 
 
 def index(request):

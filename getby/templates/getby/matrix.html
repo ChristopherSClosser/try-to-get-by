@@ -1,7 +1,6 @@
 {% extends 'getby/homepage.html' %}
 
 {% load static %}
-{% csrf_token %}
 
 {% block title %}Matrix{% endblock %}
 
@@ -9,10 +8,10 @@
   <div class="container" style="display: -webkit-box;">
     {% if matrix %}
     {% for row in matrix %}
-      <div class="row" style="margin-right: .5%;">
+      <div class="row" style="margin-right: .5em;">
         {% for spot in row %}
           {% if spot.0 %}
-            <div class="bug">
+            <div class="bug" style="color: white; background-color: grey; text-align: center;">
               {{ spot.0.id }}
             </div>
           {% else %}
