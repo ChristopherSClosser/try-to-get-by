@@ -234,7 +234,6 @@ class ProfileTestCase(TestCase):
     def test_matrix_lots_o_bugs_resizes_matrix(self):
         """."""
         mtx = bugs.start(bugs=9)
-        import pdb; pdb.set_trace()
         assert len(mtx.mtx) == 6
 
     def test_bug_idx_2x2(self):
