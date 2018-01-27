@@ -1,7 +1,17 @@
-div{
+.container{
   display: -webkit-box;
 }
+
+.row{
+  margin-right: .5em;
+}
+
 .bug{
+  text-align: center;
   background-color: grey;
   color: white;
+}
+
+.run{
+  margin-top: 1em;
 }
