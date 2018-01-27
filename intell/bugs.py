@@ -23,11 +23,6 @@ class Matrix(object):
                 for _ in range(_size):
                     self.mtx[i].append([])
 
-    def _move_all_random(self):
-        """For each bug call to move random."""
-        for bug in self._bugs:
-            bug[1]._move_random()
-
 
 class Bug(object):
     """Make a bug."""
@@ -37,6 +32,11 @@ class Bug(object):
         self.id = id
         self.moving = False
         self.directions = []
+
+    def _move_all_random(self):
+        """For each bug call to move random."""
+        for bug in self.mtx._bugs:
+            bug[1]._move_random()
 
     def _move_random(self):
         """

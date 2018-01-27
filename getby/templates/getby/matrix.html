@@ -5,23 +5,26 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
-<div class="container" style="display: -webkit-box;">
-  {% if matrix %}
-  {% for row in matrix %}
-    <div class="row">
-      {% for spot in row %}
-        {% if spot.0 %}
-          <div class="bug">
-            {{ spot.0.id }}
-          </div>
-        {% else %}
-          <div class="empty">
-            {{ spot }}
-          </div>
-        {% endif %}
-      {% endfor %}
-    </div>
-  {% endfor %}
-  {% endif %}
-</div>
+  <div class="container">
+    {% if matrix %}
+    {% for row in matrix %}
+      <div class="row">
+        {% for spot in row %}
+          {% if spot.0 %}
+            <div class="bug">
+              {{ spot.0.id }}
+            </div>
+          {% else %}
+            <div class="empty">
+              {{ spot }}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+  <form class="" action="/intell/" method="get">
+    <input class="run" type="submit" name="" value="run">
+  </form>
 {% endblock %}

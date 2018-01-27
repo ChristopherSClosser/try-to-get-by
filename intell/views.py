@@ -1,11 +1,12 @@
 """."""
 
 from django.shortcuts import render
-from django.http import HttpResponse
 from .bugs import start
+
+MTX = start(bugs=2, size=10)
 
 
 def index(request):
     """."""
-    mtx = start(size=10)
-    return render(request, 'getby/matrix.html', {'matrix': mtx.mtx})
+    MTX._bugs[0][1]._move_all_random()
+    return render(request, 'getby/matrix.html', {'matrix': MTX.mtx})

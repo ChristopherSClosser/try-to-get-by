@@ -2,6 +2,8 @@
 from django.contrib import admin
 from django.conf.urls import include, url
 from getby.views import HomeView
+from django.conf.urls.static import static
+from django.conf import settings
 """
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -21,4 +23,4 @@ urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
     url(r'^intell/', include('intell.urls')),
     url(r'^admin/', admin.site.urls),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
