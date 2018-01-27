@@ -15,3 +15,8 @@
 .run{
   margin-top: 1em;
 }
+
+.empty{
+  color: lightgray;
+  /*background-color: lightgray;*/
+}
