@@ -38,14 +38,19 @@ class Bug(object):
         for bug in self.mtx._bugs:
             bug[1]._move_random()
 
+    def _move_all_together(self):
+        """For each bug call move together."""
+        for bug in self.mtx._bugs:
+            bug[1]._get_together()
+
     def _get_together(self):
         """
         Have bugs move towards eachother and stay around eachother.
 
         Look at other bug indicies to move towards the closest.
         """
-        x = self.idx['x']
-        y = self.idx['y']
+        rand_bug = random.randrange(len(self.mtx._bugs))
+        move_towards = [rand_bug[1].idx['x'], rand_bug[1].idx['y']]
 
     def _move_random(self):
         """
