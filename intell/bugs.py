@@ -47,10 +47,15 @@ class Bug(object):
         """
         Have bugs move towards eachother and stay around eachother.
 
-        Look at other bug indicies to move towards the closest.
+        Pick index to move to where the difference between
+        sums is the least.
         """
         rand_bug = random.randrange(len(self.mtx._bugs))
-        move_towards = [rand_bug[1].idx['x'], rand_bug[1].idx['y']]
+        move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
+        nums = []
+        for idx in sorted(self.directions):
+            nums.append(idx[0] + idx[1] - move_towards)
+        index_min = min(xrange(len(nums)), key=nums.__getitem__)
 
     def _move_random(self):
         """
