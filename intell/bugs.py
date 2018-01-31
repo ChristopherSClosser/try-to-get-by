@@ -50,12 +50,25 @@ class Bug(object):
         Pick index to move to where the difference between
         sums is the least.
         """
-        rand_bug = random.randrange(len(self.mtx._bugs))
+        rand = random.randrange(len(self.mtx._bugs))
+        rand_bug = self.mtx._bugs[rand]
+        while rand_bug[1] == self:
+            rand = random.randrange(len(self.mtx._bugs))
+            rand_bug = self.mtx._bugs[rand]
         move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
         nums = []
-        for idx in sorted(self.directions):
-            nums.append(idx[0] + idx[1] - move_towards)
-        index_min = min(xrange(len(nums)), key=nums.__getitem__)
+        for idx in self.directions:
+            nums.append(abs(idx[0] + idx[1] - move_towards))
+        try:
+            index_min = min(range(len(nums)), key=nums.__getitem__)
+        except:
+            index_min = 0
+        # now perform move
+        move_to = self.directions[index_min]
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        self._directions()
 
     def _move_random(self):
         """
