@@ -32,6 +32,7 @@ class Bug(object):
         self.id = id
         self.moving = False
         self.directions = []
+        self.count = 0
 
     def _move_all_random(self):
         """For each bug call to move random."""
@@ -41,7 +42,19 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            bug[1]._get_together()
+            if prime(self.count):  # adding some randomness #
+                bug[1]._move_random()
+                self.count += 1
+                continue
+            if len(bug[1].directions) > 1:
+                bug[1]._get_together()
+            elif len(bug[1].directions) == 1:
+                move_to = bug[1].directions[0]
+                self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
+                self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
+                bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
+                self._directions()
+            self.count += 1
 
     def _get_together(self):
         """
@@ -62,7 +75,8 @@ class Bug(object):
         try:
             index_min = min(range(len(nums)), key=nums.__getitem__)
         except:
-            index_min = 0
+            rand_idx = random.randrange(len(self.directions))
+            index_min = rand_idx
         # now perform move
         move_to = self.directions[index_min]
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
@@ -199,6 +213,20 @@ def start(bugs=2, size='small'):
         new._location(grid)  # get index of bug
     new._directions()  # get available directions all bugs can go
     return grid
+
+
+def prime(x):
+    """Prime number function."""
+    # check that number is greater than 0
+    if x > 0:
+        for i in range(2, x + 1):
+            # check that only x and 1 can evenly divide x
+            if x % i == 0 and i != x and i != 1:
+                return False
+        else:
+            return True
+    else:
+        return False
 
 
 if __name__ == '__main__':  # pragma no cover
