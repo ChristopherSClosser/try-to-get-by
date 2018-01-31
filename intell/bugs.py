@@ -42,11 +42,11 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            if prime(self.count):  # adding some randomness #
-                bug[1]._move_random()
-                self.count += 1
-                continue
             if len(bug[1].directions) > 1:
+                if prime(self.count):  # adding some randomness #
+                    bug[1]._move_random()
+                    self.count += 1
+                    continue
                 bug[1]._get_together()
             elif len(bug[1].directions) == 1:
                 move_to = bug[1].directions[0]
@@ -71,7 +71,19 @@ class Bug(object):
         move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
         nums = []
         for idx in self.directions:
-            nums.append(abs(idx[0] + idx[1] - move_towards))
+            if prime(self.count):
+                nums.append(idx[0] + idx[1] - move_towards)
+                self.count += 1
+                continue
+            elif self.count % 20 == 0:
+                nums.append(abs(idx[0] + idx[1] - move_towards))
+                self.count += 1
+                continue
+            elif self.count % 7 == 0:
+                nums.append(move_towards - idx[0] + idx[1])
+            else:
+                nums.append(abs(move_towards - idx[0] + idx[1]))
+                self.count += 1
         try:
             index_min = min(range(len(nums)), key=nums.__getitem__)
         except:
@@ -83,6 +95,7 @@ class Bug(object):
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
+        self.count += 1
 
     def _move_random(self):
         """
