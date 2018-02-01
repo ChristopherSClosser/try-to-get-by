@@ -43,10 +43,10 @@ class Bug(object):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
             if len(bug[1].directions) > 1:
-                if prime(self.count):  # adding some randomness #
-                    bug[1]._move_random()
-                    self.count += 1
-                    continue
+                # if prime(self.count):  # adding some randomness #
+                #     bug[1]._move_random()
+                #     self.count += 1
+                #     continue
                 bug[1]._get_together()
             elif len(bug[1].directions) == 1:
                 move_to = bug[1].directions[0]
@@ -54,7 +54,6 @@ class Bug(object):
                 self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
-            self.count += 1
 
     def _get_together(self):
         """
@@ -70,20 +69,22 @@ class Bug(object):
             rand_bug = self.mtx._bugs[rand]
         move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
         nums = []
-        for idx in self.directions:
-            if prime(self.count):
+        if self.count > 30:
+            print('moving 0, 0', self.count)
+            for idx in self.directions:  # move to 0, 0
                 nums.append(idx[0] + idx[1] - move_towards)
-                self.count += 1
-                continue
-            elif self.count % 20 == 0:
-                nums.append(abs(idx[0] + idx[1] - move_towards))
-                self.count += 1
-                continue
-            elif self.count % 7 == 0:
+        elif self.count % 2 == 0:
+            print('moving 10, 10', self.count)
+            for idx in self.directions:  # move to 10, 10
+                nums.append(-(idx[0] + idx[1] - move_towards))
+        elif self.count % 30 == 0:
+            print('moving 0, 10', self.count)
+            for idx in self.directions:  # move to 0, 10
                 nums.append(move_towards - idx[0] + idx[1])
-            else:
-                nums.append(abs(move_towards - idx[0] + idx[1]))
-                self.count += 1
+        elif self.count % 50 == 0:
+            print('moving 10, 0', self.count)
+            for idx in self.directions:  # move to 10, 0
+                nums.append(abs(idx[0] + idx[1] - move_towards))
         try:
             index_min = min(range(len(nums)), key=nums.__getitem__)
         except:
@@ -95,6 +96,7 @@ class Bug(object):
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
+        print(self.count)
         self.count += 1
 
     def _move_random(self):
