@@ -33,6 +33,7 @@ class Bug(object):
         self.moving = False
         self.directions = []
         self.count = 0
+        self.rand_int = 0
 
     def _move_all_random(self):
         """For each bug call to move random."""
@@ -42,6 +43,7 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
+            bug[1].rand_int = random.randrange(8)
             if len(bug[1].directions) > 1:
                 # if prime(self.count):  # adding some randomness #
                 #     bug[1]._move_random()
@@ -54,6 +56,7 @@ class Bug(object):
                 self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
+                bug[1].count += 1
 
     def _get_together(self):
         """
@@ -69,19 +72,19 @@ class Bug(object):
             rand_bug = self.mtx._bugs[rand]
         move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
         nums = []
-        if self.count > 30:
+        if self.rand_int == 3 or self.rand_int == 8:
             print('moving 0, 0', self.count)
             for idx in self.directions:  # move to 0, 0
                 nums.append(idx[0] + idx[1] - move_towards)
-        elif self.count % 2 == 0:
+        elif self.rand_int == 1 or self.rand_int == 7:
             print('moving 10, 10', self.count)
             for idx in self.directions:  # move to 10, 10
                 nums.append(-(idx[0] + idx[1] - move_towards))
-        elif self.count % 30 == 0:
+        elif self.rand_int == 2 or self.rand_int == 6:
             print('moving 0, 10', self.count)
             for idx in self.directions:  # move to 0, 10
                 nums.append(move_towards - idx[0] + idx[1])
-        elif self.count % 50 == 0:
+        elif self.rand_int == 4 or self.rand_int == 5:
             print('moving 10, 0', self.count)
             for idx in self.directions:  # move to 10, 0
                 nums.append(abs(idx[0] + idx[1] - move_towards))
