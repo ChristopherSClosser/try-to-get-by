@@ -72,22 +72,29 @@ class Bug(object):
             rand_bug = self.mtx._bugs[rand]
         move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
         nums = []
-        if self.rand_int == 3 or self.rand_int == 8:
-            print('moving 0, 0', self.count)
-            for idx in self.directions:  # move to 0, 0
-                nums.append(idx[0] + idx[1] - move_towards)
-        elif self.rand_int == 1 or self.rand_int == 7:
-            print('moving 10, 10', self.count)
-            for idx in self.directions:  # move to 10, 10
-                nums.append(-(idx[0] + idx[1] - move_towards))
-        elif self.rand_int == 2 or self.rand_int == 6:
-            print('moving 0, 10', self.count)
-            for idx in self.directions:  # move to 0, 10
-                nums.append(move_towards - idx[0] + idx[1])
-        elif self.rand_int == 4 or self.rand_int == 5:
-            print('moving 10, 0', self.count)
-            for idx in self.directions:  # move to 10, 0
-                nums.append(abs(idx[0] + idx[1] - move_towards))
+        if self.count < 50:
+            for idx in self.directions:  # they only move to 0,0 or 10,10
+                # if (idx[0] + idx[1]) < move_towards:
+                nums.append((idx[0] + idx[1]) - move_towards)
+                # else:
+                #     nums.append(move_towards - (idx[0] + idx[1]))
+        else:
+            if self.rand_int == 3 or self.rand_int == 8 or self.rand_int == 6:
+                print('moving 0, 0', self.count)
+                for idx in self.directions:  # move to 0, 0
+                    nums.append(idx[0] + idx[1] - move_towards)
+            elif self.rand_int == 1 or self.rand_int == 7:
+                print('moving 10, 10', self.count)
+                for idx in self.directions:  # move to 10, 10
+                    nums.append(-(idx[0] + idx[1] - move_towards))
+            elif self.rand_int == 2:
+                print('moving 0, 10', self.count)
+                for idx in self.directions:  # move to 0, 10
+                    nums.append(move_towards - idx[0] + idx[1])
+            elif self.rand_int == 4 or self.rand_int == 5:
+                print('moving 10, 0', self.count)
+                for idx in self.directions:  # move to 10, 0
+                    nums.append(abs(idx[0] + idx[1] - move_towards))
         try:
             index_min = min(range(len(nums)), key=nums.__getitem__)
         except:
@@ -99,7 +106,7 @@ class Bug(object):
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
-        print(self.count)
+        # print(self.count)
         self.count += 1
 
     def _move_random(self):
