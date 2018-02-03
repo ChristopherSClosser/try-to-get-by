@@ -3,7 +3,7 @@
 from django.shortcuts import render
 from .bugs import start
 
-MTX = start(bugs=9, size=20)
+MTX = start(size=10)
 
 
 def index(request):
