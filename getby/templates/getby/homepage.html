@@ -9,10 +9,21 @@
   </head>
   <body>
     <div>
-      <h3>To be continued...</h3>
       <div class="matrix">
         {% block content %}{% endblock %}
       </div>
     </div>
   </body>
+  <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  setInterval(function() {
+    $.ajax({
+      type: "GET",
+      url: '',  // URL to your view that serves new info
+      success: function(data) {
+                   $('.matrix').html(data);
+                   }
+    });
+  }, 1000)
+  </script>
 </html>
