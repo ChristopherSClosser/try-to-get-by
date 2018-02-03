@@ -8,8 +8,8 @@
 
 .bug{
   text-align: center;
-  background-color: grey;
-  color: white;
+  color: lime;
+  background-color: darkgreen;
 }
 
 .run{
@@ -17,10 +17,14 @@
 }
 
 .empty{
-  color: lightgray;
+  color: green;
   /*background-color: lightgray;*/
 }
 
 body{
   padding-left: 10%;
+}
+html{
+  background-color: black;
+  color: white;
 }

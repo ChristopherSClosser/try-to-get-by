@@ -43,9 +43,9 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            if bug[1].id == 1 and bug[1].count > 15:
-                bug[1]._move_random()
-                continue
+            # if bug[1].id == 1 and bug[1].count > 15:
+            #     bug[1]._move_random()
+            #     continue
             bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1:
                 # if prime(self.count):  # adding some randomness #
@@ -69,44 +69,60 @@ class Bug(object):
         sums is the least.
         """
         rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[0]
+        rand_bug = self.mtx._bugs[rand]
         while rand_bug[1] == self:
             print("shouldn't see this")
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
-        move_towards = rand_bug[1].idx['x'] + rand_bug[1].idx['y']
-        nums = []
+        move_to_x = rand_bug[1].idx['x']
+        move_to_y = rand_bug[1].idx['y']
+        move_to = []
+        x = self.idx['x']
+        y = self.idx['y']
+        if x > move_to_x:
+            move_to.append(x - 1)
+        elif x < move_to_x:
+            move_to.append(x + 1)
+        elif x == move_to_x:
+            move_to.append(x)
+        if y > move_to_y:
+            move_to.append(y - 1)
+        elif y < move_to_y:
+            move_to.append(y + 1)
+        elif y == move_to_y:
+            move_to.append(y)
+        import pdb; pdb.set_trace()
         # rand_int = random.randrange(8)
-        if self.count < 15:
-            for idx in self.directions:  # they only move to 0,0 or 10,10
-                if (idx[0] + idx[1]) < move_towards:
-                    nums.append(-(idx[0] + idx[1]) - move_towards)
-                else:
-                    nums.append(abs(idx[0] + idx[1] - move_towards))
-        else:
-            if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
-                print('moving 0, 0', self.count)
-                for idx in self.directions:  # move to 0, 0
-                    nums.append(idx[0] + idx[1] - move_towards)
-            elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
-                print('moving 10, 10', self.count)
-                for idx in self.directions:  # move to 10, 10
-                    nums.append(-(idx[0] + idx[1] - move_towards))
-            elif self.rand_int == 2:
-                print('moving 0, 10', self.count)
-                for idx in self.directions:  # move to 0, 10
-                    nums.append(move_towards - idx[0] + idx[1])
-            elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
-                print('moving 10, 0', self.count)
-                for idx in self.directions:  # move to 10, 0
-                    nums.append(abs(idx[0] + idx[1] - move_towards))
-        try:
-            index_min = min(range(len(nums)), key=nums.__getitem__)
-        except:
-            rand_idx = random.randrange(len(self.directions))
-            index_min = rand_idx
+        # if self.count < 15:
+        #     for idx in self.directions:  # they only move to 0,0 or 10,10
+        #         if (idx[0] + idx[1]) < move_towards:
+        #             nums.append(-(idx[0] + idx[1]) - move_towards)
+        #         else:
+        #             nums.append(abs(idx[0] + idx[1] - move_towards))
+        # else:
+        #     if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
+        #         print('moving 0, 0', self.count)
+        #         for idx in self.directions:  # move to 0, 0
+        #             nums.append(idx[0] + idx[1] - move_towards)
+        #     elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
+        #         print('moving 10, 10', self.count)
+        #         for idx in self.directions:  # move to 10, 10
+        #             nums.append(-(idx[0] + idx[1] - move_towards))
+        #     elif self.rand_int == 2:
+        #         print('moving 0, 10', self.count)
+        #         for idx in self.directions:  # move to 0, 10
+        #             nums.append(move_towards - idx[0] + idx[1])
+        #     elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
+        #         print('moving 10, 0', self.count)
+        #         for idx in self.directions:  # move to 10, 0
+        #             nums.append(abs(idx[0] + idx[1] - move_towards))
+        # try:
+        #     index_min = min(range(len(nums)), key=nums.__getitem__)
+        # except:
+        #     rand_idx = random.randrange(len(self.directions))
+        #     index_min = rand_idx
         # now perform move
-        move_to = self.directions[index_min]
+        # move_to = self.directions[index_min]
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
