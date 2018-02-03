@@ -32,11 +32,97 @@ class Bug(object):
         self.id = id
         self.moving = False
         self.directions = []
+        self.count = 0
+        self.rand_int = 0
 
     def _move_all_random(self):
         """For each bug call to move random."""
         for bug in self.mtx._bugs:
             bug[1]._move_random()
+
+    def _move_all_together(self):
+        """For each bug call move together."""
+        # print(self.count)
+        for bug in self.mtx._bugs:
+            # if bug[1].id == 1:  # For queen... #
+            #     bug[1]._move_random()
+            #     continue
+            bug[1].rand_int = random.randrange(10)
+            if len(bug[1].directions) > 1:
+                bug[1]._get_together()
+            elif len(bug[1].directions) == 1:
+                move_to = bug[1].directions[0]
+                self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
+                self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
+                bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
+                self._directions()
+                bug[1].count += 1
+
+    def _get_together(self):
+        """
+        Have bugs move towards eachother and stay around eachother.
+
+        Pick index to move to where the difference between
+        sums is the least.
+        """
+        rand = random.randrange(len(self.mtx._bugs))
+        rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen #
+        while rand_bug[1] == self:
+            rand = random.randrange(len(self.mtx._bugs))
+            rand_bug = self.mtx._bugs[rand]
+        move_to_x = rand_bug[1].idx['x']
+        move_to_y = rand_bug[1].idx['y']
+        move_to = []
+        x = self.idx['x']
+        y = self.idx['y']
+        if x > move_to_x:
+            move_to.append(x - 1)
+        elif x < move_to_x:
+            move_to.append(x + 1)
+        elif x == move_to_x:
+            move_to.append(x)
+        if y > move_to_y:
+            move_to.append(y - 1)
+        elif y < move_to_y:
+            move_to.append(y + 1)
+        elif y == move_to_y:
+            move_to.append(y)
+        if move_to not in self.directions:
+            self._move_random()
+            return
+
+# >>>>>>v these methods will take the group into the four corners #
+        # nums = []
+        # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
+        #     print('moving 0, 0', self.count)
+        #     for idx in self.directions:  # move to 0, 0
+        #         nums.append(idx[0] + idx[1] - move_towards)
+        # elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
+        #     print('moving 10, 10', self.count)
+        #     for idx in self.directions:  # move to 10, 10
+        #         nums.append(-(idx[0] + idx[1] - move_towards))
+        # elif self.rand_int == 2:
+        #     print('moving 0, 10', self.count)
+        #     for idx in self.directions:  # move to 0, 10
+        #         nums.append(move_towards - idx[0] + idx[1])
+        # elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
+        #     print('moving 10, 0', self.count)
+        #     for idx in self.directions:  # move to 10, 0
+        #         nums.append(abs(idx[0] + idx[1] - move_towards))
+        # try:
+        #     index_min = min(range(len(nums)), key=nums.__getitem__)
+        # except:
+        #     rand_idx = random.randrange(len(self.directions))
+        #     index_min = rand_idx
+        # now perform move #
+        # move_to = self.directions[index_min]
+# >>>>>>^ ######################################################
+
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        self._directions()
+        self.count += 1
 
     def _move_random(self):
         """
@@ -45,12 +131,16 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
-        rand_idx = random.randint(0, (len(self.directions) - 1))
+        try:
+            rand_idx = random.randrange(len(self.directions))
+        except:  # pragma no cover
+            return
         move_to = self.directions[rand_idx]
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
+        self.count += 1
 
     def _location(self, mtx):
         """
