@@ -42,16 +42,13 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
+        print(self.count)
         for bug in self.mtx._bugs:
-            # if bug[1].id == 1 and bug[1].count > 15:
-            #     bug[1]._move_random()
-            #     continue
+            if bug[1].id == 1:  # For queen... #
+                bug[1]._move_random()
+                continue
             bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1:
-                # if prime(self.count):  # adding some randomness #
-                #     bug[1]._move_random()
-                #     self.count += 1
-                #     continue
                 bug[1]._get_together()
             elif len(bug[1].directions) == 1:
                 move_to = bug[1].directions[0]
@@ -69,9 +66,8 @@ class Bug(object):
         sums is the least.
         """
         rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[rand]
+        rand_bug = self.mtx._bugs[0]  # use rand if no queen #
         while rand_bug[1] == self:
-            print("shouldn't see this")
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
         move_to_x = rand_bug[1].idx['x']
@@ -91,43 +87,41 @@ class Bug(object):
             move_to.append(y + 1)
         elif y == move_to_y:
             move_to.append(y)
-        import pdb; pdb.set_trace()
-        # rand_int = random.randrange(8)
-        # if self.count < 15:
-        #     for idx in self.directions:  # they only move to 0,0 or 10,10
-        #         if (idx[0] + idx[1]) < move_towards:
-        #             nums.append(-(idx[0] + idx[1]) - move_towards)
-        #         else:
-        #             nums.append(abs(idx[0] + idx[1] - move_towards))
-        # else:
-        #     if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
-        #         print('moving 0, 0', self.count)
-        #         for idx in self.directions:  # move to 0, 0
-        #             nums.append(idx[0] + idx[1] - move_towards)
-        #     elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
-        #         print('moving 10, 10', self.count)
-        #         for idx in self.directions:  # move to 10, 10
-        #             nums.append(-(idx[0] + idx[1] - move_towards))
-        #     elif self.rand_int == 2:
-        #         print('moving 0, 10', self.count)
-        #         for idx in self.directions:  # move to 0, 10
-        #             nums.append(move_towards - idx[0] + idx[1])
-        #     elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
-        #         print('moving 10, 0', self.count)
-        #         for idx in self.directions:  # move to 10, 0
-        #             nums.append(abs(idx[0] + idx[1] - move_towards))
+        if move_to not in self.directions:
+            self._move_random()
+            return
+
+# >>>>>>v these methods will take the group into the four corners #
+        # nums = []
+        # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
+        #     print('moving 0, 0', self.count)
+        #     for idx in self.directions:  # move to 0, 0
+        #         nums.append(idx[0] + idx[1] - move_towards)
+        # elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
+        #     print('moving 10, 10', self.count)
+        #     for idx in self.directions:  # move to 10, 10
+        #         nums.append(-(idx[0] + idx[1] - move_towards))
+        # elif self.rand_int == 2:
+        #     print('moving 0, 10', self.count)
+        #     for idx in self.directions:  # move to 0, 10
+        #         nums.append(move_towards - idx[0] + idx[1])
+        # elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
+        #     print('moving 10, 0', self.count)
+        #     for idx in self.directions:  # move to 10, 0
+        #         nums.append(abs(idx[0] + idx[1] - move_towards))
         # try:
         #     index_min = min(range(len(nums)), key=nums.__getitem__)
         # except:
         #     rand_idx = random.randrange(len(self.directions))
         #     index_min = rand_idx
-        # now perform move
+        # now perform move #
         # move_to = self.directions[index_min]
+# >>>>>>^ ######################################################
+
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
-        # print(self.count)
         self.count += 1
 
     def _move_random(self):
@@ -143,6 +137,7 @@ class Bug(object):
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
+        self.count += 1
 
     def _location(self, mtx):
         """
@@ -259,20 +254,6 @@ def start(bugs=2, size='small'):
         new._location(grid)  # get index of bug
     new._directions()  # get available directions all bugs can go
     return grid
-
-
-def prime(x):
-    """Prime number function."""
-    # check that number is greater than 0
-    if x > 0:
-        for i in range(2, x + 1):
-            # check that only x and 1 can evenly divide x
-            if x % i == 0 and i != x and i != 1:
-                return False
-        else:
-            return True
-    else:
-        return False
 
 
 if __name__ == '__main__':  # pragma no cover
