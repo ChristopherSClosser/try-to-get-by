@@ -226,6 +226,14 @@ class ProfileTestCase(TestCase):
         res = mtx.mtx
         assert len(res) == 18
 
+    def test_matrix_tons_o_bugs_move_together(self):
+        """."""
+        mtx = bugs.start(bugs=100)
+        res = mtx.mtx
+        for _ in range(40):
+            mtx._bugs[0][1]._move_all_together()
+        assert len(res) == 18
+
     def test_matrix_lots_o_bugs_no_resize_matrix(self):
         """."""
         mtx = bugs.start(bugs=5, size=4)

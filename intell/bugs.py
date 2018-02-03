@@ -42,11 +42,11 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
-        print(self.count)
+        # print(self.count)
         for bug in self.mtx._bugs:
-            if bug[1].id == 1:  # For queen... #
-                bug[1]._move_random()
-                continue
+            # if bug[1].id == 1:  # For queen... #
+            #     bug[1]._move_random()
+            #     continue
             bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1:
                 bug[1]._get_together()
@@ -66,7 +66,7 @@ class Bug(object):
         sums is the least.
         """
         rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[0]  # use rand if no queen #
+        rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen #
         while rand_bug[1] == self:
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
@@ -131,7 +131,10 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
-        rand_idx = random.randint(0, (len(self.directions) - 1))
+        try:
+            rand_idx = random.randrange(len(self.directions))
+        except:  # pragma no cover
+            return
         move_to = self.directions[rand_idx]
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
         self.mtx.mtx[move_to[0]][move_to[1]].append(self)
