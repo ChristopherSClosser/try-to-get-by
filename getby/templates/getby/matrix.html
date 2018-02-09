@@ -6,7 +6,7 @@
 
 {% block content %}
 <h3>To be continued...</h3>
-  {% csrf_token %}
+  <!-- {% csrf_token %} -->
   <div class="">
     {{ bug }}
   </div>
@@ -23,7 +23,7 @@
               </div>
             {% else %}
               <div class="empty">
-                {{ spot }}
+                ' '
               </div>
             {% endif %}
           {% endfor %}

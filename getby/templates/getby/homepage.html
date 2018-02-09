@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-{% csrf_token %}
+<!-- {% csrf_token %} -->
 <html>
   <head>
     <link rel="stylesheet" type="text/css" href="{% static 'getby/base.css' %}" />
@@ -29,18 +29,18 @@
     {% else %}
       <script src="{% static 'getby/jqmin.js' %}" type="text/javascript"></script>
       <script type="text/javascript">
-      (function update() {
+      (setTimeout(function() {
+        update();
+      }, 55))();
+      function update() {
         $.ajax({
           type: "GET",
           url: '',  // URL to your view that serves new info
           success: function(data) {
             $('#matrix').html(data);
-            // var refInterval = window.setTimeout(update, 150000);
           }
-        }).then(function() {           // on completion, restart
-          setTimeout(update, 300000);  // function refers to itself
         });
-      })();
+      };
       </script>
     {% endif %}
 </html>

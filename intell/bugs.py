@@ -42,7 +42,6 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
-        # print(self.count)
         for bug in self.mtx._bugs:
             if bug[1].id == 1:  # For queen... #
                 bug[1]._move_random()
@@ -67,7 +66,7 @@ class Bug(object):
         """
         rand = random.randrange(len(self.mtx._bugs))
         rand_bug = self.mtx._bugs[0]  # use rand if no queen 0 for queen #
-        while rand_bug[1] == self:
+        while rand_bug[1] == self:  # pragma no cover
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
         move_to_x = rand_bug[1].idx['x']
