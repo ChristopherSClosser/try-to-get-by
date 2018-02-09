@@ -35,8 +35,10 @@
           url: '',  // URL to your view that serves new info
           success: function(data) {
             $('#matrix').html(data);
-            var refInterval = window.setTimeout(update, 100000);
+            // var refInterval = window.setTimeout(update, 150000);
           }
+        }).then(function() {           // on completion, restart
+          setTimeout(update, 200000);  // function refers to itself
         });
       })();
       </script>
