@@ -5,27 +5,34 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
+<h3>To be continued...</h3>
+  <!-- {% csrf_token %} -->
+  <div class="">
+    {{ bug }}
+  </div>
+  <br>
   <div class="container">
     {% if matrix %}
-    {% for row in matrix %}
-      <div class="row">
-        {% for spot in row %}
-          {% if spot.0 %}
-            <div class="bug">
-              <!-- {{ spot.0.id }} -->
-              {{ 0 }}
-            </div>
-          {% else %}
-            <div class="empty">
-              {{ spot }}
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% endfor %}
+      {% for row in matrix %}
+        <div class="row">
+          {% for spot in row %}
+            {% if spot.0 %}
+              <div class="bug">
+                {{ spot.0.id }}
+                <!-- {{ 0 }} -->
+              </div>
+            {% else %}
+              <div class="empty">
+                ' '
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
     {% endif %}
   </div>
-  <form class="" action="/intell/" method="get">
+
+  <!-- <form class="" action="/intell/" method="get">
     <input class="run" type="submit" name="" value="run">
-  </form>
+  </form> -->
 {% endblock %}
