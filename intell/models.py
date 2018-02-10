@@ -11,6 +11,7 @@ class Matrix(models.Model):
         """."""
         self._bugs = []
         self._size = _size
+        self._food = []
         self.mtx = [
             [[], [], []],
             [[], [], []],
@@ -22,6 +23,27 @@ class Matrix(models.Model):
                 self.mtx.append([])
                 for _ in range(_size):
                     self.mtx[i].append([])
+
+
+class Food(object):
+    """Food instances."""
+
+    def __init__(self, mtx, _size):
+        """."""
+        self._size = _size
+        self.mtx = mtx
+
+
+def feed(grid, size=5):
+    """Operation for feeding. Standard is 5 feedings."""
+    rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+    rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
+    while grid.mtx[rand_idx1][rand_idx2]:
+        rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+        rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
+    new = Food(grid.mtx, size)
+    grid.mtx[rand_idx1][rand_idx2].append(new)
+    grid._food.append(new)
 
 
 def start(bugs=2, size='small'):

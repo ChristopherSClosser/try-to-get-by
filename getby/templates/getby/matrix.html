@@ -16,10 +16,16 @@
         <div class="row">
           {% for spot in row %}
             {% if spot.0 %}
-              <div class="bug">
-                {{ spot.0.id }}
-                <!-- {{ 0 }} -->
-              </div>
+              {% if spot.0.id %}
+                <div class="bug">
+                  {{ spot.0.id }}
+                  <!-- {{ 0 }} -->
+                </div>
+              {% else %}
+                <div class="food">
+                  X
+                </div>
+              {% endif %}
             {% else %}
               <div class="empty">
                 {{ spot }}
@@ -31,7 +37,7 @@
     {% endif %}
   </div>
 
-  <!-- <form class="" action="/intell/" method="get">
-    <input class="run" type="submit" name="" value="run">
-  </form> -->
+  <form class="" action="/intell/" method="post">{% csrf_token %}
+    <input class="run" type="submit" name="" value="feed">
+  </form>
 {% endblock %}
