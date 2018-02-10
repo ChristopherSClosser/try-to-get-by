@@ -6,8 +6,6 @@ from django.views.generic.base import TemplateView
 from urllib.parse import parse_qs, urlparse
 
 
-# INC = 0
-# if INC == 0:
 MTX = start(9, 10)
 
 
