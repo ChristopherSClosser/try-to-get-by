@@ -5,8 +5,7 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
-<h3>To be continued...</h3>
-  <!-- {% csrf_token %} -->
+<h3>Moving...</h3>
   <div class="">
     {{ bug }}
   </div>
@@ -23,7 +22,7 @@
               </div>
             {% else %}
               <div class="empty">
-                ' '
+                {{ spot }}
               </div>
             {% endif %}
           {% endfor %}
