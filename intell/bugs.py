@@ -43,9 +43,9 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            if bug[1].id == 1:  # For queen... #
-                bug[1]._move_random()
-                continue
+            # if bug[1].id == 1:  # For queen... #
+            #     bug[1]._move_random()
+            #     continue
             bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1:
                 bug[1]._get_together()
@@ -65,7 +65,7 @@ class Bug(object):
         sums is the least.
         """
         rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[0]  # use rand if no queen 0 for queen #
+        rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen #
         while rand_bug[1] == self:  # pragma no cover
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
