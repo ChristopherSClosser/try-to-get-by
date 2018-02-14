@@ -15,6 +15,7 @@ class ProfileTestCase(TestCase):
         self.std_mtx = models.Matrix()
         self.md_mtx = models.Matrix(5)
         self.std_start = models.start()
+        self.sixbyten = models.start(6, 10)
 
     def test_home_view_has_title(self):
         """."""
@@ -51,6 +52,17 @@ class ProfileTestCase(TestCase):
     def test_md_matrix_init_size(self):
         """."""
         assert self.md_mtx._size == 5
+
+    def test_feed_std_mtx(self):
+        """."""
+        models.feed(self.std_mtx)
+        assert len(self.std_mtx._food) == 1
+
+    def test_feed_6x10(self):
+        """."""
+        for _ in range(20):
+            models.feed(self.sixbyten)
+        assert len(self.sixbyten._food) == 20
 
     def test_mtx_move_all_random(self):
         """."""

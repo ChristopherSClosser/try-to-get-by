@@ -2,3 +2,4 @@
 include = getby/views.py,
           intell/views.py,
           intell/bugs.py,
+          intell/models.py,
