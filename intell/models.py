@@ -33,6 +33,20 @@ class Food(object):
         self._size = _size
         self.mtx = mtx
 
+    def _location(self):
+        """
+        Location of food in matrix[i][i].
+
+        Gives food the reference of Matrix object in which it lives.
+        Initiated by feed(mtx, size of food)...
+        """
+        # self.mtx = mtx
+        self.idx = {}
+        for subarray in self.mtx.mtx:
+            if [self] in subarray:
+                self.idx['x'] = self.mtx.mtx.index(subarray)
+                self.idx['y'] = subarray.index([self])
+
 
 def feed(grid, size=5):
     """Operation for feeding. Standard is 5 feedings."""
@@ -41,9 +55,10 @@ def feed(grid, size=5):
     while grid.mtx[rand_idx1][rand_idx2]:
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-    new = Food(grid.mtx, size)
+    new = Food(grid, size)
     grid.mtx[rand_idx1][rand_idx2].append(new)
     grid._food.append(new)
+    new._location()
 
 
 def start(bugs=2, size='small'):

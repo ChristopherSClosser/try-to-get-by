@@ -23,7 +23,8 @@ class Bug(object):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
             # if bug is hungry and there is food
-
+            if bug[1].hungry:
+                bug[1]._get_food()
             # if bug[1].id == 1:  # For queen... #
             #     bug[1]._move_random()
             #     continue
@@ -38,6 +39,36 @@ class Bug(object):
                 self._directions()
                 bug[1].count += 1
         print(self.mtx._bugs[0][1].hungry)
+
+    def _get_food(self):
+        """Move towards food."""
+        if self.mtx._food:
+            food = self.mtx._food[0]
+            move_to_x = food.idx['x']
+            move_to_y = food.idx['y']
+            move_to = []
+            x = self.idx['x']
+            y = self.idx['y']
+            if x > move_to_x:
+                move_to.append(x - 1)
+            elif x < move_to_x:
+                move_to.append(x + 1)
+            elif x == move_to_x:
+                move_to.append(x)
+            if y > move_to_y:
+                move_to.append(y - 1)
+            elif y < move_to_y:
+                move_to.append(y + 1)
+            elif y == move_to_y:
+                move_to.append(y)
+            if move_to not in self.directions:
+                self._move_random()
+                return
+            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            self._directions()
+            self.count += 1
 
     def _get_together(self):
         """
