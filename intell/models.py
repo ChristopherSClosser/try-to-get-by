@@ -47,6 +47,16 @@ class Food(object):
                 self.idx['x'] = self.mtx.mtx.index(subarray)
                 self.idx['y'] = subarray.index([self])
 
+    def eat(self):
+        """."""
+        pass
+
+    def size(self):
+        """."""
+        if self._size <= 0:
+            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            self.mtx._food.remove(self)
+
 
 def feed(grid, size=5):
     """Operation for feeding. Standard is 5 feedings."""
@@ -57,6 +67,7 @@ def feed(grid, size=5):
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
     new = Food(grid, size)
     grid.mtx[rand_idx1][rand_idx2].append(new)
+    new.fid = len(grid._food)
     grid._food.append(new)
     new._location()
 
