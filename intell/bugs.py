@@ -9,7 +9,7 @@ class Bug(object):
     def __init__(self, id):
         """Set defaults."""
         self.id = id
-        self.moving = False
+        self.hungry = False
         self.directions = []
         self.count = 0
         self.rand_int = 0
@@ -22,6 +22,8 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
+            # if bug is hungry and there is food
+
             # if bug[1].id == 1:  # For queen... #
             #     bug[1]._move_random()
             #     continue
@@ -35,6 +37,7 @@ class Bug(object):
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
                 bug[1].count += 1
+        print(self.mtx._bugs[0][1].hungry)
 
     def _get_together(self):
         """
@@ -134,6 +137,12 @@ class Bug(object):
                 self.idx['x'] = self.mtx.mtx.index(subarray)
                 self.idx['y'] = subarray.index([self])
 
+    def _hungry(self):
+        """Make hungry true @ chosen interval."""
+        if self.count % 50 == 0 and self.count > 0 and self.hungry is False:
+            self.hungry = True
+            return
+
     def _directions(self):
         """
         Given the matrix find available directions to travel.
@@ -150,12 +159,13 @@ class Bug(object):
         """
         mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
-            # clear any previous directions
+            # clear any previous directions #
             bug[1].directions = []
             x = bug[1].idx['x']
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
+            self._hungry()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""
