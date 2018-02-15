@@ -38,7 +38,7 @@ class Bug(object):
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
                 bug[1].count += 1
-        print(self.mtx._bugs[0][1].hungry)
+        # print(self.mtx._bugs[0][1].hungry)
 
     def _get_food(self):
         """Move towards food."""

@@ -247,6 +247,26 @@ class ProfileTestCase(TestCase):
             mtx._bugs[0][1]._move_all_together()
         assert len(res) == 18
 
+    def test_matrix_move_together_over_50(self):
+        """."""
+        mtx = models.start(bugs=5)
+        for _ in range(100):
+            mtx._bugs[0][1]._move_all_together()
+        assert len(mtx._bugs) == 5
+
+    def test_matrix_move_together_feed(self):
+        """."""
+        mtx = models.start(5, 10)
+        models.feed(mtx)
+        food = 0
+        for _ in range(2000):
+            if _ % 50 == 0:
+                food += 1
+                print(food)
+                models.feed(mtx)
+            mtx._bugs[0][1]._move_all_together()
+        assert len(mtx._bugs) == 5
+
     def test_matrix_lots_o_bugs_no_resize_matrix(self):
         """."""
         mtx = models.start(bugs=5, size=4)
