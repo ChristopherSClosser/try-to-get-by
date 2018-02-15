@@ -213,7 +213,7 @@ class Bug(object):
         try:
             if len(mtx[x][y + 1]) == 0:
                 bug[1].directions.append([x, y + 1])
-            else:
+            elif len(mtx[x][y + 1]) == 1:
                 if type(mtx[x][y + 1][0]).__name__ == 'Food':
                     bug[1]._eat(mtx[x][y + 1][0])
         except IndexError:
