@@ -258,11 +258,8 @@ class ProfileTestCase(TestCase):
         """."""
         mtx = models.start(5, 10)
         models.feed(mtx)
-        food = 0
         for _ in range(2000):
             if _ % 50 == 0:
-                food += 1
-                print(food)
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert len(mtx._bugs) == 5

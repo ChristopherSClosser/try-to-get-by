@@ -47,10 +47,6 @@ class Food(object):
                 self.idx['x'] = self.mtx.mtx.index(subarray)
                 self.idx['y'] = subarray.index([self])
 
-    def eat(self):
-        """."""
-        pass
-
     def size(self):
         """."""
         if self._size <= 0:
@@ -58,7 +54,7 @@ class Food(object):
             self.mtx._food.remove(self)
 
 
-def feed(grid, size=10):
+def feed(grid, size=5):
     """Operation for feeding. Standard is 5 feedings."""
     rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
     rand_idx2 = random.randint(0, (len(grid.mtx) - 1))

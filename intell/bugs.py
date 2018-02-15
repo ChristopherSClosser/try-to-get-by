@@ -180,9 +180,10 @@ class Bug(object):
         # y = self.idx['y']
         # fx = self.mtx._food[0].idx['x']
         # fy = self.mtx._food[0].idx['y']
-        self.hungry = False
-        food._size -= 1
-        food.size()
+        if self.hungry:
+            self.hungry = False
+            food._size -= 1
+            food.size()
 
     def _directions(self):
         """
@@ -221,17 +222,17 @@ class Bug(object):
         try:
             if len(mtx[x + 1][y]) == 0:
                 bug[1].directions.append([x + 1, y])
-            else:
-                if type(mtx[x + 1][y]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x + 1][y])
+            elif len(mtx[x + 1][y]) == 1:
+                if type(mtx[x + 1][y][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y][0])
         except IndexError:
             pass
         try:
             if len(mtx[x + 1][y + 1]) == 0:
                 bug[1].directions.append([x + 1, y + 1])
-            else:
-                if type(mtx[x + 1][y + 1]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x + 1][y + 1])
+            elif len(mtx[x + 1][y + 1]) == 1:
+                if type(mtx[x + 1][y + 1][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y + 1][0])
         except IndexError:
             pass
 
@@ -244,38 +245,38 @@ class Bug(object):
         if x > 0 and y > 0:
             if len(mtx[x - 1][y - 1]) == 0:
                 bug[1].directions.append([x - 1, y - 1])
-            else:
-                if type(mtx[x - 1][y - 1]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x - 1][y - 1])
+            elif len(mtx[x - 1][y - 1]) == 1:
+                if type(mtx[x - 1][y - 1][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x - 1][y - 1][0])
 
     def _neg_x(self, bug, mtx, x, y):
         """Get if trying to move x - 1."""
         try:
             if len(mtx[x - 1][y + 1]) == 0:
                 bug[1].directions.append([x - 1, y + 1])
-            else:
-                if type(mtx[x - 1][y + 1]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x - 1][y + 1])
+            elif len(mtx[x - 1][y + 1]) == 1:
+                if type(mtx[x - 1][y + 1][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x - 1][y + 1][0])
         except IndexError:
             pass
         if len(mtx[x - 1][y]) == 0:
             bug[1].directions.append([x - 1, y])
-        else:
-            if type(mtx[x - 1][y]).__name__ == 'Food':
-                bug[1]._eat(mtx[x - 1][y])
+        elif len(mtx[x - 1][y]) == 1:
+            if type(mtx[x - 1][y][0]).__name__ == 'Food':
+                bug[1]._eat(mtx[x - 1][y][0])
 
     def _neg_y(self, bug, mtx, x, y):
         """Get if trying to move y - 1."""
         try:
             if len(mtx[x + 1][y - 1]) == 0:
                 bug[1].directions.append([x + 1, y - 1])
-            else:
-                if type(mtx[x + 1][y - 1]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x + 1][y - 1])
+            elif len(mtx[x + 1][y - 1]) == 1:
+                if type(mtx[x + 1][y - 1][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y - 1][0])
         except IndexError:
             pass
         if len(mtx[x][y - 1]) == 0:
             bug[1].directions.append([x, y - 1])
-        else:
-            if type(mtx[x][y - 1]).__name__ == 'Food':
-                bug[1]._eat(mtx[x][y - 1])
+        elif len(mtx[x][y - 1]) == 1:
+            if type(mtx[x][y - 1][0]).__name__ == 'Food':
+                bug[1]._eat(mtx[x][y - 1][0])
