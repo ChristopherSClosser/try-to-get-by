@@ -1,27 +1,6 @@
 """Intelligent bugs."""
 
 import random
-import math
-
-
-class Matrix(object):
-    """Make the grid."""
-
-    def __init__(self, _size='small'):
-        """."""
-        self._bugs = []
-        self._size = _size
-        self.mtx = [
-            [[], [], []],
-            [[], [], []],
-            [[], [], []],
-        ]
-        if _size != 'small':
-            self.mtx = []
-            for i in range(_size):
-                self.mtx.append([])
-                for _ in range(_size):
-                    self.mtx[i].append([])
 
 
 class Bug(object):
@@ -30,7 +9,7 @@ class Bug(object):
     def __init__(self, id):
         """Set defaults."""
         self.id = id
-        self.moving = False
+        self.hungry = False
         self.directions = []
         self.count = 0
         self.rand_int = 0
@@ -43,9 +22,12 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            if bug[1].id == 1:  # For queen... #
-                bug[1]._move_random()
-                continue
+            # if bug is hungry and there is food
+            if bug[1].hungry:
+                bug[1]._get_food()
+            # if bug[1].id == 1:  # For queen... #
+            #     bug[1]._move_random()
+            #     continue
             bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1:
                 bug[1]._get_together()
@@ -56,6 +38,37 @@ class Bug(object):
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
                 bug[1].count += 1
+        # print(self.mtx._bugs[0][1].hungry)
+
+    def _get_food(self):
+        """Move towards food."""
+        if self.mtx._food:
+            food = self.mtx._food[0]
+            move_to_x = food.idx['x']
+            move_to_y = food.idx['y']
+            move_to = []
+            x = self.idx['x']
+            y = self.idx['y']
+            if x > move_to_x:
+                move_to.append(x - 1)
+            elif x < move_to_x:
+                move_to.append(x + 1)
+            elif x == move_to_x:
+                move_to.append(x)
+            if y > move_to_y:
+                move_to.append(y - 1)
+            elif y < move_to_y:
+                move_to.append(y + 1)
+            elif y == move_to_y:
+                move_to.append(y)
+            if move_to not in self.directions:
+                self._move_random()
+                return
+            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            self._directions()
+            self.count += 1
 
     def _get_together(self):
         """
@@ -65,7 +78,7 @@ class Bug(object):
         sums is the least.
         """
         rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[0]  # use rand if no queen 0 for queen #
+        rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen #
         while rand_bug[1] == self:  # pragma no cover
             rand = random.randrange(len(self.mtx._bugs))
             rand_bug = self.mtx._bugs[rand]
@@ -155,6 +168,22 @@ class Bug(object):
                 self.idx['x'] = self.mtx.mtx.index(subarray)
                 self.idx['y'] = subarray.index([self])
 
+    def _hungry(self):
+        """Make hungry true @ chosen interval."""
+        if self.count % 50 == 0 and self.count > 0 and self.hungry is False:
+            self.hungry = True
+            return
+
+    def _eat(self, food):
+        """Food count decrement."""
+        # x = self.idx['x']
+        # y = self.idx['y']
+        # fx = self.mtx._food[0].idx['x']
+        # fy = self.mtx._food[0].idx['y']
+        self.hungry = False
+        food._size -= 1
+        food.size()
+
     def _directions(self):
         """
         Given the matrix find available directions to travel.
@@ -171,28 +200,38 @@ class Bug(object):
         """
         mtx = self.mtx.mtx
         for bug in self.mtx._bugs:
-            # clear any previous directions
+            # clear any previous directions #
             bug[1].directions = []
             x = bug[1].idx['x']
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
+            bug[1]._hungry()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""
-        try:  # seems everything needs a try...
+        try:
             if len(mtx[x][y + 1]) == 0:
                 bug[1].directions.append([x, y + 1])
+            elif len(mtx[x][y + 1]) == 1:
+                if type(mtx[x][y + 1][0]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x][y + 1][0])
         except IndexError:
             pass
         try:
             if len(mtx[x + 1][y]) == 0:
                 bug[1].directions.append([x + 1, y])
+            else:
+                if type(mtx[x + 1][y]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y])
         except IndexError:
             pass
         try:
             if len(mtx[x + 1][y + 1]) == 0:
                 bug[1].directions.append([x + 1, y + 1])
+            else:
+                if type(mtx[x + 1][y + 1]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y + 1])
         except IndexError:
             pass
 
@@ -205,60 +244,38 @@ class Bug(object):
         if x > 0 and y > 0:
             if len(mtx[x - 1][y - 1]) == 0:
                 bug[1].directions.append([x - 1, y - 1])
+            else:
+                if type(mtx[x - 1][y - 1]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x - 1][y - 1])
 
     def _neg_x(self, bug, mtx, x, y):
         """Get if trying to move x - 1."""
         try:
             if len(mtx[x - 1][y + 1]) == 0:
                 bug[1].directions.append([x - 1, y + 1])
+            else:
+                if type(mtx[x - 1][y + 1]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x - 1][y + 1])
         except IndexError:
             pass
         if len(mtx[x - 1][y]) == 0:
             bug[1].directions.append([x - 1, y])
+        else:
+            if type(mtx[x - 1][y]).__name__ == 'Food':
+                bug[1]._eat(mtx[x - 1][y])
 
     def _neg_y(self, bug, mtx, x, y):
         """Get if trying to move y - 1."""
         try:
             if len(mtx[x + 1][y - 1]) == 0:
                 bug[1].directions.append([x + 1, y - 1])
+            else:
+                if type(mtx[x + 1][y - 1]).__name__ == 'Food':
+                    bug[1]._eat(mtx[x + 1][y - 1])
         except IndexError:
             pass
         if len(mtx[x][y - 1]) == 0:
             bug[1].directions.append([x, y - 1])
-
-
-def start(bugs=2, size='small'):
-    """
-    Init matrix and bugs.
-
-    A default matrix will look like this...
-    [
-      [[<intell.bugs.Bug object at 0x7f420e2e1c88>], [], []],
-      [[<intell.bugs.Bug object at 0x7f420e2e1160>], [], []],
-                                                [[], [], []],
-    ]
-    Bugs will be randomly placed.
-    """
-    grid = Matrix(size)
-    mtx_size = len(grid.mtx) * len(grid.mtx)
-    if bugs > int(math.ceil(mtx_size)) / 3:
-        x = int(math.ceil((bugs * 3) ** (0.5)))
-        grid = Matrix(x)
-    for bug in range(bugs):
-        rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
-        rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        while grid.mtx[rand_idx1][rand_idx2]:
-            rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
-            rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        new = Bug(bug + 1)
-        grid.mtx[rand_idx1][rand_idx2].append(new)
-        grid._bugs.append((new.id, new))
-        new._location(grid)  # get index of bug
-    new._directions()  # get available directions all bugs can go
-    return grid
-
-
-if __name__ == '__main__':  # pragma no cover
-    res = start(size=15)
-    for item in res.mtx:
-        print(item, '\n')
+        else:
+            if type(mtx[x][y - 1]).__name__ == 'Food':
+                bug[1]._eat(mtx[x][y - 1])

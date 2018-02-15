@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from getby.views import HomeView
 
-from . import views, bugs
+from . import views, bugs, models
 
 
 class ProfileTestCase(TestCase):
@@ -12,15 +12,16 @@ class ProfileTestCase(TestCase):
 
     def setUp(self):
         """."""
-        self.std_mtx = bugs.Matrix()
-        self.md_mtx = bugs.Matrix(5)
-        self.std_start = bugs.start()
+        self.std_mtx = models.Matrix()
+        self.md_mtx = models.Matrix(5)
+        self.std_start = models.start()
+        self.sixbyten = models.start(6, 10)
 
     def test_home_view_has_title(self):
         """."""
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
-    # 
+
     # def test_intell_view_200(self):
     #     """."""
     #     response = views.index(self)
@@ -51,6 +52,17 @@ class ProfileTestCase(TestCase):
     def test_md_matrix_init_size(self):
         """."""
         assert self.md_mtx._size == 5
+
+    def test_feed_std_mtx(self):
+        """."""
+        models.feed(self.std_mtx)
+        assert len(self.std_mtx._food) == 1
+
+    def test_feed_6x10(self):
+        """."""
+        for _ in range(20):
+            models.feed(self.sixbyten)
+        assert len(self.sixbyten._food) == 20
 
     def test_mtx_move_all_random(self):
         """."""
@@ -182,26 +194,26 @@ class ProfileTestCase(TestCase):
 
     def test_matrix_one_bug(self):
         """."""
-        mtx = bugs.start(bugs=1)
+        mtx = models.start(bugs=1)
         res = mtx._bugs
         assert len(res) == 1
 
     def test_std_start_bug(self):
         """."""
         for _ in range(200):
-            std_start = bugs.start()
+            std_start = models.start()
             assert std_start._bugs[0][0] == 1
 
     def test_start_lots_o_times(self):
         """."""
         for _ in range(200):
-            strt = bugs.start(bugs=15, size=10)
+            strt = models.start(bugs=15, size=10)
             assert len(strt.mtx) == 10
 
     def test_start_size_2_bug_index(self):
         """."""
         for _ in range(200):
-            strt = bugs.start(size=2)
+            strt = models.start(size=2)
             assert strt._bugs[1][0] == 2
 
     def test_matrix_standard_bug_list(self):
@@ -211,43 +223,63 @@ class ProfileTestCase(TestCase):
 
     def test_matrix_more_bugs_list(self):
         """."""
-        mtx = bugs.start(bugs=4)
+        mtx = models.start(bugs=4)
         res = mtx._bugs
         assert len(res) == 4
 
     def test_matrix_lots_o_bugs_list(self):
         """."""
-        mtx = bugs.start(bugs=10)
+        mtx = models.start(bugs=10)
         res = mtx._bugs
         assert len(res) == 10
 
     def test_matrix_tons_o_bugs_martix(self):
         """."""
-        mtx = bugs.start(bugs=100)
+        mtx = models.start(bugs=100)
         res = mtx.mtx
         assert len(res) == 18
 
     def test_matrix_tons_o_bugs_move_together(self):
         """."""
-        mtx = bugs.start(bugs=100)
+        mtx = models.start(bugs=100)
         res = mtx.mtx
         for _ in range(40):
             mtx._bugs[0][1]._move_all_together()
         assert len(res) == 18
 
+    def test_matrix_move_together_over_50(self):
+        """."""
+        mtx = models.start(bugs=5)
+        for _ in range(100):
+            mtx._bugs[0][1]._move_all_together()
+        assert len(mtx._bugs) == 5
+
+    def test_matrix_move_together_feed(self):
+        """."""
+        mtx = models.start(5, 10)
+        models.feed(mtx)
+        food = 0
+        for _ in range(2000):
+            if _ % 50 == 0:
+                food += 1
+                print(food)
+                models.feed(mtx)
+            mtx._bugs[0][1]._move_all_together()
+        assert len(mtx._bugs) == 5
+
     def test_matrix_lots_o_bugs_no_resize_matrix(self):
         """."""
-        mtx = bugs.start(bugs=5, size=4)
+        mtx = models.start(bugs=5, size=4)
         assert len(mtx.mtx) == 4
 
     def test_matrix_lots_o_bugs_resizes_matrix(self):
         """."""
-        mtx = bugs.start(bugs=9)
+        mtx = models.start(bugs=9)
         assert len(mtx.mtx) == 6
 
     def test_bug_idx_2x2(self):
         """."""
-        mtx = bugs.start(size=2)
+        mtx = models.start(size=2)
         idx = []
         res = []
         for subarray in mtx.mtx:
@@ -270,7 +302,7 @@ class ProfileTestCase(TestCase):
 
     def test_bug_idx_small(self):
         """."""
-        mtx = bugs.start()
+        mtx = models.start()
         idx = []
         res = []
         for subarray in mtx.mtx:
@@ -293,7 +325,7 @@ class ProfileTestCase(TestCase):
 
     def test_bug_idx_larger(self):
         """."""
-        mtx = bugs.start(size=10)
+        mtx = models.start(size=10)
         idx = []
         res = []
         for subarray in mtx.mtx:
