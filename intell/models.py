@@ -1,3 +1,5 @@
+"""Matrix and food classes."""
+
 from django.db import models
 import random
 import math
@@ -40,7 +42,6 @@ class Food(object):
         Gives food the reference of Matrix object in which it lives.
         Initiated by feed(mtx, size of food)...
         """
-        # self.mtx = mtx
         self.idx = {}
         for subarray in self.mtx.mtx:
             if [self] in subarray:
@@ -55,7 +56,17 @@ class Food(object):
 
 
 def feed(grid, size=5):
-    """Operation for feeding. Standard is 5 feedings."""
+    """
+    Operation for feeding. Standard is 5 feedings.
+
+    A default matrix will look like this...
+    [
+      [[<intell.models.Food object at 0x7f420e2e1c88>], [], []],
+                                                   [[], [], []],
+                                                   [[], [], []],
+    ]
+    Food will be randomly placed.
+    """
     rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
     rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
     while grid.mtx[rand_idx1][rand_idx2]:

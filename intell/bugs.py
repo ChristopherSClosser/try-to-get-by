@@ -22,7 +22,7 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         for bug in self.mtx._bugs:
-            # if bug is hungry and there is food
+            # if bug is hungry and there is food #
             if bug[1].hungry:
                 bug[1]._get_food()
             # if bug[1].id == 1:  # For queen... #
@@ -38,7 +38,6 @@ class Bug(object):
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
                 bug[1].count += 1
-        # print(self.mtx._bugs[0][1].hungry)
 
     def _get_food(self):
         """Move towards food."""
@@ -106,19 +105,15 @@ class Bug(object):
 # >>>>>>v these methods will take the group into the four corners #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
-        #     print('moving 0, 0', self.count)
         #     for idx in self.directions:  # move to 0, 0
         #         nums.append(idx[0] + idx[1] - move_towards)
         # elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
-        #     print('moving 10, 10', self.count)
         #     for idx in self.directions:  # move to 10, 10
         #         nums.append(-(idx[0] + idx[1] - move_towards))
         # elif self.rand_int == 2:
-        #     print('moving 0, 10', self.count)
         #     for idx in self.directions:  # move to 0, 10
         #         nums.append(move_towards - idx[0] + idx[1])
         # elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
-        #     print('moving 10, 0', self.count)
         #     for idx in self.directions:  # move to 10, 0
         #         nums.append(abs(idx[0] + idx[1] - move_towards))
         # try:
@@ -126,7 +121,7 @@ class Bug(object):
         # except:
         #     rand_idx = random.randrange(len(self.directions))
         #     index_min = rand_idx
-        # now perform move #
+        # # now perform move #
         # move_to = self.directions[index_min]
 # >>>>>>^ ######################################################
 
@@ -176,10 +171,6 @@ class Bug(object):
 
     def _eat(self, food):
         """Food count decrement."""
-        # x = self.idx['x']
-        # y = self.idx['y']
-        # fx = self.mtx._food[0].idx['x']
-        # fy = self.mtx._food[0].idx['y']
         if self.hungry:
             self.hungry = False
             food._size -= 1

@@ -6,6 +6,10 @@ from getby.views import HomeView
 
 from . import views, bugs, models
 
+from django.test import Client
+
+csrf_client = Client(enforce_csrf_checks=True)
+
 
 class ProfileTestCase(TestCase):
     """."""
@@ -22,11 +26,12 @@ class ProfileTestCase(TestCase):
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
 
-    # def test_intell_view_200(self):
-    #     """."""
-    #     response = views.index(self)
-    #     assert response.status_code == 200
-    #
+    def test_intell_view_200(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert res.status_code == 200
+
     # def test_intell_view_has_title(self):
     #     """."""
     #     response = views.index(self)
