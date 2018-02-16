@@ -4,7 +4,7 @@ from django.test import TestCase
 
 from getby.views import HomeView
 
-from . import views, bugs, models
+from . import bugs, models
 
 from django.test import Client
 
@@ -32,11 +32,11 @@ class ProfileTestCase(TestCase):
         res = c.get('/intell/')
         assert res.status_code == 200
 
-    # def test_intell_view_has_title(self):
-    #     """."""
-    #     response = views.index(self)
-    #     import pdb; pdb.set_trace()
-    #     assert b'<title>The start</title>' in response.content
+    def test_intell_view_has_title(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert b'<title>The start</title>' in res.content
 
     def test_std_matrix_init_bugs(self):
         """test_std_matrix_init_bugs."""
