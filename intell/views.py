@@ -32,10 +32,15 @@ def index(request):  # pragma no cover
     """."""
     # MTX = request.session['MTX']
     # import pdb; pdb.set_trace()
-    MTX._bugs[0][1]._move_all_together()
     if request.method == 'POST':
         feed(MTX)
-    return render(request, 'getby/matrix.html', {
-        'matrix': MTX.mtx,
-        'bug': MTX._bugs[0][1].count,
-    })
+    if len(MTX._bugs) >= 1:
+        bug = MTX._bugs[0][1].count
+        MTX._bugs[0][1]._move_all_together()
+        bugs = len(MTX._bugs)
+        return render(request, 'getby/matrix.html', {
+            'matrix': MTX.mtx,
+            'bugs': bugs,
+            'bug': bug,
+        })
+    return redirect(reverse('mtx'))
