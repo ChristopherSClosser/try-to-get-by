@@ -14,12 +14,10 @@
         <input type="text" name="size" value="25">
         <input type="submit" name="" value="run">
       </form>
-    {% else %}
-
     {% endif %}
     {% if request.get_full_path == '/nobugs/' %}
       <div class="">
-        They all died...<br>Restart server to continue
+        You let them all die...<br>Restart server to continue
       </div>
     {% endif %}
     <div>

@@ -1,6 +1,7 @@
 """Intelligent bugs."""
 
 import random
+from . import models
 
 
 class Bug(object):
@@ -22,14 +23,18 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
-        print(self.countdown)
+        print(self.countdown, self.hungry)
+        if self.hungry:
+            if len(self.mtx._food) == 0:
+                models.feed(self.mtx)
         for bug in self.mtx._bugs:
             # if bug is hungry and there is food #
-            if bug[1].countdown == 250:
+            if bug[1].countdown >= 500:
                 bug[1]._starving()
             if bug[1].hungry:
-                bug[1].countdown += 1
                 bug[1]._get_food()
+            elif not bug[1].hungry:
+                bug[1]._hungry()
             # if bug[1].id == 1:  # For queen... #
             #     bug[1]._move_random()
             #     continue
@@ -43,6 +48,7 @@ class Bug(object):
                 bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
                 self._directions()
                 bug[1].count += 1
+            bug[1].countdown += 1
 
     def _get_food(self):
         """Move towards food."""
@@ -177,21 +183,28 @@ class Bug(object):
 
     def _hungry(self):
         """Make hungry true @ chosen interval."""
-        if self.count % 50 == 0 and self.count > 0 and self.hungry is False:
+        if self.count % 100 == 0 and self.countdown > 50 or self.countdown > 550:
             self.hungry = True
 
     def _eat(self, food):
         """Food count decrement."""
         if self.hungry:
             self.hungry = False
-            self.countdown = 0
+            self.countdown -= 70
+            self._countdown()
             food._size -= 1
             food.size()
+
+    def _countdown(self):
+        """Manage life force."""
+        if self.countdown <= 0:
+            self.countdown = 1
 
     def _starving(self):
         """What happens in death."""
         if self.mtx._food:
             self.countdown -= 5
+            self._countdown()
             self._get_food()
             return
         for bug in self.mtx._bugs:
@@ -222,7 +235,8 @@ class Bug(object):
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
-            bug[1]._hungry()
+            # if not bug[1].hungry:
+            #     bug[1]._hungry()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""

@@ -56,7 +56,7 @@ class Food(object):
             self.mtx._food.remove(self)
 
 
-def feed(grid, size=5):
+def feed(grid, size=8):
     """
     Operation for feeding. Standard is 5 feedings.
 
