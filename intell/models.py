@@ -9,8 +9,9 @@ from intell.bugs import Bug
 class Matrix(models.Model):
     """Make the grid."""
 
-    def __init__(self, _size='small'):
+    def __init__(self, _size='small', *args, **kwargs):
         """."""
+        super().__init__(*args, **kwargs)
         self._bugs = []
         self._size = _size
         self._food = []
