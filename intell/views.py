@@ -32,9 +32,10 @@ def index(request):  # pragma no cover
     """."""
     # MTX = request.session['MTX']
     # import pdb; pdb.set_trace()
-    if request.method == 'POST':
-        feed(MTX)
+
     if len(MTX._bugs) >= 1:
+        if request.method == 'POST':
+            feed(MTX)
         bug = MTX._bugs[0][1].count
         MTX._bugs[0][1]._move_all_together()
         bugs = len(MTX._bugs)
@@ -43,4 +44,4 @@ def index(request):  # pragma no cover
             'bugs': bugs,
             'bug': bug,
         })
-    return redirect(reverse('mtx'))
+    return redirect(reverse('homenobugs'))

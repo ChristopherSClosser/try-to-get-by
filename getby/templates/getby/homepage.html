@@ -17,6 +17,11 @@
     {% else %}
 
     {% endif %}
+    {% if request.get_full_path == '/nobugs/' %}
+      <div class="">
+        They all died...<br>Restart server to continue
+      </div>
+    {% endif %}
     <div>
       <div id="matrix" class="matrix">
         {% block content %}{% endblock %}
