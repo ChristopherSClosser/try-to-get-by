@@ -33,15 +33,21 @@ def index(request):  # pragma no cover
     # MTX = request.session['MTX']
     # import pdb; pdb.set_trace()
 
-    if len(MTX._bugs) >= 1:
+    if len(MTX._bugs) > 0:
         if request.method == 'POST':
             feed(MTX)
         bug = MTX._bugs[0][1].count
-        MTX._bugs[0][1]._move_all_together()
-        bugs = len(MTX._bugs)
+        try:
+            MTX._bugs[0][1]._move_all_together()
+            bugs = len(MTX._bugs)
+        except:
+            return render(request, 'getby/matrix.html', {
+                'matrix': MTX.mtx,
+            })
         return render(request, 'getby/matrix.html', {
             'matrix': MTX.mtx,
             'bugs': bugs,
             'bug': bug,
         })
-    return redirect(reverse('homenobugs'))
+    elif len(MTX._bugs) == 0:
+        return redirect(reverse('homenobugs'))

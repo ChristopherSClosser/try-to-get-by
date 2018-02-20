@@ -5,13 +5,17 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
-<h3>Moving...</h3>
   <div class="">
     {% if bug %}
       {{ bug }}
     {% endif %}
     {% if bugs %}
+      <h3>Moving...</h3>
       {{ bugs }} live bugs
+    {% else %}
+      <div class="">
+        You let them all die...<br>Restart server to continue
+      </div>
     {% endif %}
   </div>
   <br>
@@ -51,6 +55,15 @@
   {% else %}
     <script type="text/javascript">
       clearTimeout()
+      (function update() {
+        $.ajax({
+          type: "GET",
+          url: '/nobugs',  // URL to your view that serves new info
+          success: function(data) {
+            $('#matrix').html(data)
+          }
+        })
+      })()
     </script>
   {% endif %}
 {% endblock %}

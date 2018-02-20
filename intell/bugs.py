@@ -31,19 +31,35 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
-        print(self.countdown, self.hungry)
-        if self.hungry:
-            if len(self.mtx._food) == 0:
-                models.feed(self.mtx)
+        # ## auto feed from bug 1 ## #
+        # if self.hungry:
+        #     if len(self.mtx._food) == 0:
+        #         models.feed(self.mtx)
+        if len(self.mtx._bugs) == 0:
+            return
+        if len(self.mtx._bugs) == 1:
+            bug = self.mtx._bugs[0][1]
+            bug._hungry
+            if bug.hungry:
+                bug._get_food()
+            elif not bug.hungry:
+                bug._hungry()
+            if bug.countdown >= 500:
+                bug._starving()
+                return
+            return
         for bug in self.mtx._bugs:
             # if bug is hungry and there is food #
             if bug[1].countdown >= 500:
+                bug[1]._hungry
                 bug[1]._starving()
+                return
             if bug[1].hungry:
                 bug[1]._get_food()
             elif not bug[1].hungry:
                 bug[1]._hungry()
-            # if bug[1].id == 1:  # For queen... #
+            # ## For queen... ## #
+            # if bug[1].id == 1:
             #     bug[1]._move_random()
             #     continue
             bug[1].rand_int = random.randrange(10)
@@ -170,11 +186,12 @@ class Bug(object):
             return
         try:
             move_to = self.directions[rand_idx]
-            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            self._directions()
-            self.count += 1
+            self._move(move_to)
+            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            # self._directions()
+            # self.count += 1
         except:
             pass
 
@@ -194,7 +211,7 @@ class Bug(object):
 
     def _hungry(self):
         """Make hungry true @ chosen interval."""
-        if self.count % 100 == 0 and self.countdown > 50 or self.countdown > 550:
+        if self.count % 100 == 0 and self.countdown > 50 or self.countdown > 475:
             self.hungry = True
 
     def _eat(self, food):
