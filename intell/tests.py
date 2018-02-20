@@ -263,23 +263,28 @@ class ProfileTestCase(TestCase):
         """."""
         mtx = models.start(5, 10)
         models.feed(mtx)
-        for _ in range(2000):
+        for _ in range(1000):
             if _ % 50 == 0:
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert len(mtx._bugs) == 5
 
-    def test_matrix_move_together_no_food(self):
+    def test_matrix_move_together_little_food(self):
         """."""
         mtx = models.start(5, 10)
         models.feed(mtx)
         bug = mtx._bugs[0][1]
-        for _ in range(2000):
+        for _ in range(1000):
             if bug.countdown == 500:
                 models.feed(mtx)
-            # if len(mtx._bugs) > 0:
-            #     mtx._bugs[0][1]._move_all_together()
-            # elif len(mtx._bugs) == 0:
+            bug._move_all_together()
+        assert mtx
+
+    def test_matrix_move_together_no_food(self):
+        """."""
+        mtx = models.start(9, 20)
+        bug = mtx._bugs[0][1]
+        for _ in range(1000):
             bug._move_all_together()
         assert mtx
 
