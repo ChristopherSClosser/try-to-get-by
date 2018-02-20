@@ -11,7 +11,7 @@ MTX = start(9, 20)
 
 
 @csrf_protect
-def front_input(request):
+def front_input(request):  # pragma no cover
     """."""
     res = parse_qs(urlparse(request.get_full_path()).query)
     bugs = int(res['bugs'][0])

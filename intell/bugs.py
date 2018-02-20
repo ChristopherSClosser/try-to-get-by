@@ -42,8 +42,6 @@ class Bug(object):
             bug._hungry
             if bug.hungry:
                 bug._get_food()
-            elif not bug.hungry:
-                bug._hungry()
             if bug.countdown >= 500:
                 bug._starving()
                 return
@@ -140,15 +138,12 @@ class Bug(object):
             if move_to not in self.directions:
                 self._move_random()
                 return
-            try:
-                self._move(move_to)
-                # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-                # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-                # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-                # self._directions()
-                # self.count += 1
-            except:
-                pass
+            self._move(move_to)
+            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            # self._directions()
+            # self.count += 1
         # >>>>>>v these methods will take the group into the four corners #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
@@ -184,16 +179,13 @@ class Bug(object):
             rand_idx = random.randrange(len(self.directions))
         except:  # pragma no cover
             return
-        try:
-            move_to = self.directions[rand_idx]
-            self._move(move_to)
-            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            # self._directions()
-            # self.count += 1
-        except:
-            pass
+        move_to = self.directions[rand_idx]
+        self._move(move_to)
+        # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        # self._directions()
+        # self.count += 1
 
     def _location(self, mtx):
         """

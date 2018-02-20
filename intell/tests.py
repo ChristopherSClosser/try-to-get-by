@@ -205,19 +205,19 @@ class ProfileTestCase(TestCase):
 
     def test_std_start_bug(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             std_start = models.start()
             assert std_start._bugs[0][0] == 1
 
     def test_start_lots_o_times(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             strt = models.start(bugs=15, size=10)
             assert len(strt.mtx) == 10
 
     def test_start_size_2_bug_index(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             strt = models.start(size=2)
             assert strt._bugs[1][0] == 2
 
@@ -268,6 +268,20 @@ class ProfileTestCase(TestCase):
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert len(mtx._bugs) == 5
+
+    def test_matrix_move_together_no_food(self):
+        """."""
+        mtx = models.start(5, 10)
+        models.feed(mtx)
+        bug = mtx._bugs[0][1]
+        for _ in range(2000):
+            if bug.countdown == 500:
+                models.feed(mtx)
+            # if len(mtx._bugs) > 0:
+            #     mtx._bugs[0][1]._move_all_together()
+            # elif len(mtx._bugs) == 0:
+            bug._move_all_together()
+        assert mtx
 
     def test_matrix_lots_o_bugs_no_resize_matrix(self):
         """."""
