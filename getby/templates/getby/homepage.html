@@ -10,12 +10,15 @@
 
     {% if request.get_full_path == '/' %}
       <form class="" action="/intell/" method="get">
-        <!-- <input type="text" name="bugs" value="2">
-        <input type="text" name="size" value="25"> -->
+        <input type="text" name="bugs" value="2">
+        <input type="text" name="size" value="25">
         <input type="submit" name="" value="run">
       </form>
-    {% else %}
-
+    {% endif %}
+    {% if request.get_full_path == '/nobugs/' %}
+      <div class="">
+        You let them all die...<br>Restart server to continue
+      </div>
     {% endif %}
     <div>
       <div id="matrix" class="matrix">
@@ -25,7 +28,7 @@
   </body>
     {% if request.get_full_path == '/' %}
     {% else %}
-      <script src="{% static 'getby/jqmin.js' %}" type="text/javascript"></script>
+      <!-- <script src="{% static 'getby/jqmin.js' %}" type="text/javascript"></script>
       <script type="text/javascript" src="{% static 'getby/app.js' %}">
       // (setTimeout(function() {
       //   update();
@@ -39,6 +42,6 @@
       //     }
       //   });
       // };
-      </script>
+      </script> -->
     {% endif %}
 </html>

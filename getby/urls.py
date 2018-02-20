@@ -21,6 +21,7 @@ Including another URLconf
 
 urlpatterns = [
     url(r'^$', HomeView.as_view(), name='home'),
+    url(r'^nobugs/', HomeView.as_view(), name='homenobugs'),
     url(r'^intell/', include('intell.urls')),
     url(r'^admin/', admin.site.urls),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

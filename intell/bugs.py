@@ -1,6 +1,7 @@
 """Intelligent bugs."""
 
 import random
+from . import models
 
 
 class Bug(object):
@@ -9,23 +10,54 @@ class Bug(object):
     def __init__(self, id):
         """Set defaults."""
         self.id = id
-        self.hungry = False
+        self.hungry = True
         self.directions = []
         self.count = 0
         self.rand_int = 0
+        self.countdown = 0
 
     def _move_all_random(self):
         """For each bug call to move random."""
         for bug in self.mtx._bugs:
             bug[1]._move_random()
 
+    def _move(self, move_to):
+        """Remove and append bug in new location."""
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        self._directions()
+        self.count += 1
+
     def _move_all_together(self):
         """For each bug call move together."""
+        # ## auto feed from bug 1 ## #
+        # if self.hungry:
+        #     if len(self.mtx._food) == 0:
+        #         models.feed(self.mtx)
+        if len(self.mtx._bugs) == 0:
+            return
+        if len(self.mtx._bugs) == 1:
+            bug = self.mtx._bugs[0][1]
+            bug._hungry
+            if bug.hungry:
+                bug._get_food()
+            if bug.countdown >= 500:
+                bug._starving()
+                return
+            return
         for bug in self.mtx._bugs:
-            # if bug is hungry and there is food
+            # if bug is hungry and there is food #
+            if bug[1].countdown >= 500:
+                bug[1]._hungry
+                bug[1]._starving()
+                return
             if bug[1].hungry:
                 bug[1]._get_food()
-            # if bug[1].id == 1:  # For queen... #
+            elif not bug[1].hungry:
+                bug[1]._hungry()
+            # ## For queen... ## #
+            # if bug[1].id == 1:
             #     bug[1]._move_random()
             #     continue
             bug[1].rand_int = random.randrange(10)
@@ -33,12 +65,13 @@ class Bug(object):
                 bug[1]._get_together()
             elif len(bug[1].directions) == 1:
                 move_to = bug[1].directions[0]
-                self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
-                self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
-                bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
-                self._directions()
-                bug[1].count += 1
-        # print(self.mtx._bugs[0][1].hungry)
+                bug[1]._move(move_to)
+                # self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
+                # self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
+                # bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
+                # self._directions()
+                # bug[1].count += 1
+            bug[1].countdown += 1
 
     def _get_food(self):
         """Move towards food."""
@@ -64,11 +97,13 @@ class Bug(object):
             if move_to not in self.directions:
                 self._move_random()
                 return
-            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            self._directions()
-            self.count += 1
+            self._move(move_to)
+            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            # self._directions()
+            # self.count += 1
+            return
 
     def _get_together(self):
         """
@@ -77,48 +112,50 @@ class Bug(object):
         Pick index to move to where the difference between
         sums is the least.
         """
-        rand = random.randrange(len(self.mtx._bugs))
-        rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen #
-        while rand_bug[1] == self:  # pragma no cover
+        if len(self.mtx._bugs) > 0:
             rand = random.randrange(len(self.mtx._bugs))
-            rand_bug = self.mtx._bugs[rand]
-        move_to_x = rand_bug[1].idx['x']
-        move_to_y = rand_bug[1].idx['y']
-        move_to = []
-        x = self.idx['x']
-        y = self.idx['y']
-        if x > move_to_x:
-            move_to.append(x - 1)
-        elif x < move_to_x:
-            move_to.append(x + 1)
-        elif x == move_to_x:
-            move_to.append(x)
-        if y > move_to_y:
-            move_to.append(y - 1)
-        elif y < move_to_y:
-            move_to.append(y + 1)
-        elif y == move_to_y:
-            move_to.append(y)
-        if move_to not in self.directions:
-            self._move_random()
-            return
-
-# >>>>>>v these methods will take the group into the four corners #
+            rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen
+            while rand_bug[1] == self:  # pragma no cover
+                rand = random.randrange(len(self.mtx._bugs))
+                rand_bug = self.mtx._bugs[rand]
+            move_to_x = rand_bug[1].idx['x']
+            move_to_y = rand_bug[1].idx['y']
+            move_to = []
+            x = self.idx['x']
+            y = self.idx['y']
+            if x > move_to_x:
+                move_to.append(x - 1)
+            elif x < move_to_x:
+                move_to.append(x + 1)
+            elif x == move_to_x:
+                move_to.append(x)
+            if y > move_to_y:
+                move_to.append(y - 1)
+            elif y < move_to_y:
+                move_to.append(y + 1)
+            elif y == move_to_y:
+                move_to.append(y)
+            if move_to not in self.directions:
+                self._move_random()
+                return
+            self._move(move_to)
+            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            # self._directions()
+            # self.count += 1
+        # >>>>>>v these methods will take the group into the four corners #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
-        #     print('moving 0, 0', self.count)
         #     for idx in self.directions:  # move to 0, 0
         #         nums.append(idx[0] + idx[1] - move_towards)
         # elif self.rand_int == 1 or self.rand_int == 5 or self.rand_int == 7:
-        #     print('moving 10, 10', self.count)
         #     for idx in self.directions:  # move to 10, 10
         #         nums.append(-(idx[0] + idx[1] - move_towards))
         # elif self.rand_int == 2:
-        #     print('moving 0, 10', self.count)
         #     for idx in self.directions:  # move to 0, 10
         #         nums.append(move_towards - idx[0] + idx[1])
         # elif self.rand_int == 4 or self.rand_int == 6 or self.rand_int == 8:
-        #     print('moving 10, 0', self.count)
         #     for idx in self.directions:  # move to 10, 0
         #         nums.append(abs(idx[0] + idx[1] - move_towards))
         # try:
@@ -126,15 +163,9 @@ class Bug(object):
         # except:
         #     rand_idx = random.randrange(len(self.directions))
         #     index_min = rand_idx
-        # now perform move #
+        # # now perform move #
         # move_to = self.directions[index_min]
-# >>>>>>^ ######################################################
-
-        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-        self._directions()
-        self.count += 1
+        # >>>>>>^ ######################################################
 
     def _move_random(self):
         """
@@ -143,16 +174,18 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
+        # if len(self.directions)
         try:
             rand_idx = random.randrange(len(self.directions))
         except:  # pragma no cover
             return
         move_to = self.directions[rand_idx]
-        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-        self._directions()
-        self.count += 1
+        self._move(move_to)
+        # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        # self._directions()
+        # self.count += 1
 
     def _location(self, mtx):
         """
@@ -170,20 +203,35 @@ class Bug(object):
 
     def _hungry(self):
         """Make hungry true @ chosen interval."""
-        if self.count % 50 == 0 and self.count > 0 and self.hungry is False:
+        if self.count % 100 == 0 and self.countdown > 50 or self.countdown > 475:
             self.hungry = True
-            return
 
     def _eat(self, food):
         """Food count decrement."""
-        # x = self.idx['x']
-        # y = self.idx['y']
-        # fx = self.mtx._food[0].idx['x']
-        # fy = self.mtx._food[0].idx['y']
         if self.hungry:
             self.hungry = False
+            self.countdown -= 70
+            self._countdown()
             food._size -= 1
             food.size()
+
+    def _countdown(self):
+        """Manage life force."""
+        if self.countdown <= 0:
+            self.countdown = 1
+
+    def _starving(self):
+        """What happens in death."""
+        if self.mtx._food:
+            self.countdown -= 5
+            self._countdown()
+            self._get_food()
+            return
+        for bug in self.mtx._bugs:
+            if bug[0] == self.id:
+                self.mtx._bugs.remove(bug)
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        return
 
     def _directions(self):
         """
@@ -207,7 +255,8 @@ class Bug(object):
             y = bug[1].idx['y']
             self._pos_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
-            bug[1]._hungry()
+            # if not bug[1].hungry:
+            #     bug[1]._hungry()
 
     def _pos_dir(self, bug, mtx, x, y):
         """Get positive directions."""

@@ -5,9 +5,18 @@
 {% block title %}Matrix{% endblock %}
 
 {% block content %}
-<h3>Moving...</h3>
   <div class="">
-    {{ bug }}
+    {% if bug %}
+      {{ bug }}
+    {% endif %}
+    {% if bugs %}
+      <h3>Moving...</h3>
+      {{ bugs }} live bugs
+    {% else %}
+      <div class="">
+        You let them all die...<br>Restart server to continue
+      </div>
+    {% endif %}
   </div>
   <br>
   <div class="container">
@@ -40,4 +49,21 @@
   <form class="" action="/intell/" method="post">{% csrf_token %}
     <input class="run" type="submit" name="" value="feed">
   </form>
+  {% if bugs %}
+    <script src="{% static 'getby/jqmin.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'getby/app.js' %}"></script>
+  {% else %}
+    <script type="text/javascript">
+      clearTimeout()
+      (function update() {
+        $.ajax({
+          type: "GET",
+          url: '/nobugs',  // URL to your view that serves new info
+          success: function(data) {
+            $('#matrix').html(data)
+          }
+        })
+      })()
+    </script>
+  {% endif %}
 {% endblock %}

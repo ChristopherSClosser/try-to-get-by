@@ -4,7 +4,11 @@ from django.test import TestCase
 
 from getby.views import HomeView
 
-from . import views, bugs, models
+from . import bugs, models
+
+from django.test import Client
+
+csrf_client = Client(enforce_csrf_checks=True)
 
 
 class ProfileTestCase(TestCase):
@@ -22,16 +26,17 @@ class ProfileTestCase(TestCase):
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
 
-    # def test_intell_view_200(self):
-    #     """."""
-    #     response = views.index(self)
-    #     assert response.status_code == 200
-    #
-    # def test_intell_view_has_title(self):
-    #     """."""
-    #     response = views.index(self)
-    #     import pdb; pdb.set_trace()
-    #     assert b'<title>The start</title>' in response.content
+    def test_intell_view_200(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert res.status_code == 200
+
+    def test_intell_view_has_title(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert b'<title>The start</title>' in res.content
 
     def test_std_matrix_init_bugs(self):
         """test_std_matrix_init_bugs."""
@@ -200,19 +205,19 @@ class ProfileTestCase(TestCase):
 
     def test_std_start_bug(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             std_start = models.start()
             assert std_start._bugs[0][0] == 1
 
     def test_start_lots_o_times(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             strt = models.start(bugs=15, size=10)
             assert len(strt.mtx) == 10
 
     def test_start_size_2_bug_index(self):
         """."""
-        for _ in range(200):
+        for _ in range(20):
             strt = models.start(size=2)
             assert strt._bugs[1][0] == 2
 
@@ -258,11 +263,30 @@ class ProfileTestCase(TestCase):
         """."""
         mtx = models.start(5, 10)
         models.feed(mtx)
-        for _ in range(2000):
+        for _ in range(1000):
             if _ % 50 == 0:
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert len(mtx._bugs) == 5
+
+    def test_matrix_move_together_little_food(self):
+        """."""
+        mtx = models.start(5, 10)
+        models.feed(mtx)
+        bug = mtx._bugs[0][1]
+        for _ in range(1000):
+            if bug.countdown == 500:
+                models.feed(mtx)
+            bug._move_all_together()
+        assert mtx
+
+    def test_matrix_move_together_no_food(self):
+        """."""
+        mtx = models.start(9, 20)
+        bug = mtx._bugs[0][1]
+        for _ in range(1000):
+            bug._move_all_together()
+        assert mtx
 
     def test_matrix_lots_o_bugs_no_resize_matrix(self):
         """."""
