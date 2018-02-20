@@ -21,6 +21,14 @@ class Bug(object):
         for bug in self.mtx._bugs:
             bug[1]._move_random()
 
+    def _move(self, move_to):
+        """Remove and append bug in new location."""
+        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+        self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+        self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+        self._directions()
+        self.count += 1
+
     def _move_all_together(self):
         """For each bug call move together."""
         print(self.countdown, self.hungry)
@@ -74,11 +82,12 @@ class Bug(object):
             if move_to not in self.directions:
                 self._move_random()
                 return
-            self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            self._directions()
-            self.count += 1
+            self._move(move_to)
+            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+            # self._directions()
+            # self.count += 1
             return
 
     def _get_together(self):
@@ -114,8 +123,15 @@ class Bug(object):
             if move_to not in self.directions:
                 self._move_random()
                 return
-
-# >>>>>>v these methods will take the group into the four corners #
+            try:
+                self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+                self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+                self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+                self._directions()
+                self.count += 1
+            except:
+                pass
+        # >>>>>>v these methods will take the group into the four corners #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
         #     for idx in self.directions:  # move to 0, 0
@@ -136,15 +152,7 @@ class Bug(object):
         #     index_min = rand_idx
         # # now perform move #
         # move_to = self.directions[index_min]
-# >>>>>>^ ######################################################
-            try:
-                self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-                self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-                self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-                self._directions()
-                self.count += 1
-            except:
-                pass
+        # >>>>>>^ ######################################################
 
     def _move_random(self):
         """
@@ -153,6 +161,7 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
+        # if len(self.directions)
         try:
             rand_idx = random.randrange(len(self.directions))
         except:  # pragma no cover
