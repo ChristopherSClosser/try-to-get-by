@@ -51,11 +51,12 @@ class Bug(object):
                 bug[1]._get_together()
             elif len(bug[1].directions) == 1:
                 move_to = bug[1].directions[0]
-                self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
-                self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
-                bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
-                self._directions()
-                bug[1].count += 1
+                bug[1]._move(move_to)
+                # self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
+                # self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
+                # bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
+                # self._directions()
+                # bug[1].count += 1
             bug[1].countdown += 1
 
     def _get_food(self):
@@ -124,11 +125,12 @@ class Bug(object):
                 self._move_random()
                 return
             try:
-                self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-                self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-                self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-                self._directions()
-                self.count += 1
+                self._move(move_to)
+                # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+                # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
+                # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
+                # self._directions()
+                # self.count += 1
             except:
                 pass
         # >>>>>>v these methods will take the group into the four corners #
