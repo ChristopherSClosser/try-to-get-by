@@ -4,12 +4,17 @@ import random
 from . import models
 
 
+GEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+
 class Bug(object):
     """Make a bug."""
 
     def __init__(self, id):
         """Set defaults."""
         self.id = id
+        if self.id < 10:
+            self.gen = GEN[0]
         self.hungry = True
         self.mature = False
         self.in_heat = False
@@ -17,6 +22,11 @@ class Bug(object):
         self.count = 0
         self.rand_int = 0
         self.countdown = 0
+
+    # def _gen(self):
+    #     """."""
+    #     x = len(list(str(self.id)))
+    #     return GEN[x - 1]
 
     def _move_all_random(self):
         """For each bug call to move random."""
@@ -70,8 +80,11 @@ class Bug(object):
             bug._starving()
             return
         for bug in self.mtx._bugs:
-            if bug[1].count == 1000:
+            if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
+            if bug[1].count >= 4000:
+                bug[1].countdown += 400
+                bug[1]._starving()
             # if bug is hungry and there is food #
             if bug[1].hungry:
                 bug[1]._get_food()
@@ -112,7 +125,8 @@ class Bug(object):
             move_to = self._get_move_to(move_to_x, move_to_y)
             if move_to:
                 self._move(move_to)
-            return
+        else:
+            self._move_random()
 
     def _get_together(self):
         """
@@ -225,6 +239,7 @@ class Bug(object):
         new_id = int(''.join([str(self.id), str(partner.id)]))
         self._child_name(new_id)
         new = Bug(new_id)
+        new.gen = GEN[GEN.index(self.gen) + 1]
         self.mtx.mtx[rand_idx1][rand_idx2].append(new)
         self.mtx._bugs.append((new.id, new))
         new._location(self.mtx)
@@ -245,10 +260,9 @@ class Bug(object):
     def _starving(self):
         """What happens in death."""
         if self.mtx._food:
-            self.countdown -= 5
-            self._countdown()
+            # self.countdown -= 1
+            # self._countdown()
             self._get_food()
-            return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
                 self.mtx._bugs.remove(bug)
