@@ -27,8 +27,9 @@ def index(request):  # pragma no cover
     if len(MTX._bugs) > 0:
         if request.method == 'POST':
             feed(MTX)
-        bug = MTX._bugs[0][1].count
-        countdown = MTX._bugs[0][1].countdown
+        bug = MTX._bugs[-1][1].count
+        countdown = MTX._bugs[-1][1].countdown
+        bugid = MTX._bugs[-1][1].id
         try:
             MTX._bugs[0][1]._move_all_together()
             bugs = len(MTX._bugs)
@@ -40,6 +41,7 @@ def index(request):  # pragma no cover
             'matrix': MTX.mtx,
             'bugs': bugs,
             'bug': bug,
+            'id': bugid,
             'cd': countdown,
         })
     elif len(MTX._bugs) == 0:

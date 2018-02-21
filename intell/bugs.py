@@ -11,6 +11,8 @@ class Bug(object):
         """Set defaults."""
         self.id = id
         self.hungry = True
+        self.mature = False
+        self.in_heat = False
         self.directions = []
         self.count = 0
         self.rand_int = 0
@@ -68,24 +70,26 @@ class Bug(object):
             bug._starving()
             return
         for bug in self.mtx._bugs:
-            if bug[1].countdown == 1000:
+            if bug[1].count == 1000:
                 bug[1].mature = True
             # if bug is hungry and there is food #
-            if bug[1].countdown >= 500:
-                bug[1]._hungry
-                bug[1]._starving()
-                return
-            if bug[1].mature and bug[1].countdown <= 200:
-                # time to breed #
-                bug[1].in_heat = True
-                bug[1]._find_partner()
-            elif bug[1].mature and bug[1].countdown > 200:
-                bug[1].hungry = True
             if bug[1].hungry:
                 bug[1]._get_food()
             elif not bug[1].hungry:
                 bug[1]._hungry()
-
+            if bug[1].countdown >= 500:
+                bug[1]._hungry
+                bug[1]._starving()
+                return
+            if bug[1].mature and bug[1].countdown > 200:
+                bug[1].hungry = True
+                bug[1]._get_food()
+                bug[1].hungry = True
+                return
+            elif bug[1].mature and bug[1].countdown <= 200:
+                # time to breed #
+                bug[1].in_heat = True
+                bug[1]._find_partner()
             # ----- For queen... ----- #
             # if bug[1].id == 1:
             #     bug[1]._move_random()
@@ -180,8 +184,8 @@ class Bug(object):
     def _hungry(self):
         """Make hungry true @ chosen interval."""
         if (
-            self.count % 100 == 0
-            and self.countdown > 50
+            self.count % 90 == 0 and self.countdown > 50
+            or self.mature and self.countdown > 200
             or self.countdown > 475
         ):
             self.hungry = True
@@ -196,23 +200,34 @@ class Bug(object):
             food.size()
 
     def _find_partner(self):
-        """."""
-        pass
+        """Find another bug that is in heat."""
+        for bug in self.mtx._bugs:
+            bug = bug[1]
+            if bug.in_heat and self.id != bug.id:
+                self._breed(bug)
+                return
 
     def _breed(self, partner):
         """How to breed."""
+        # import pdb; pdb.set_trace()
+        self.in_heat = False
+        self.mature = False
+        self.countdown += 200
+        partner.in_heat = False
+        partner.mature = False
+        partner.countdown += 200
         rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
         rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
         while self.mtx.mtx[rand_idx1][rand_idx2]:
             rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
             rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        new_id = int(''.join([self.id, partner.id]))
-        if new_id > 9:
-            self._child_name(new_id)
+        new_id = int(''.join([str(self.id), str(partner.id)]))
+        self._child_name(new_id)
         new = Bug(new_id)
         self.mtx.mtx[rand_idx1][rand_idx2].append(new)
         self.mtx._bugs.append((new.id, new))
         new._location(self.mtx)
+        self._directions()
 
     def _child_name(self, new_id):
         """."""
