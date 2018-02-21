@@ -1,6 +1,7 @@
 """Intelligent bugs."""
 
 import random
+from . import models
 
 
 class Bug(object):
@@ -76,6 +77,10 @@ class Bug(object):
                 bug[1]._get_food()
             elif not bug[1].hungry:
                 bug[1]._hungry()
+            mature = bug[1].count - bug[1].countdown
+            if mature >= bug[1].countdown and bug[1].count > 100:
+                # time to breed #
+                bug[1]._find_partner()
             # ----- For queen... ----- #
             # if bug[1].id == 1:
             #     bug[1]._move_random()
@@ -184,6 +189,32 @@ class Bug(object):
             self._countdown()
             food._size -= 1
             food.size()
+
+    def _find_partner(self):
+        """."""
+        pass
+
+    def _breed(self, partner):
+        """How to breed."""
+        rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+        rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+        while self.mtx.mtx[rand_idx1][rand_idx2]:
+            rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+            rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+        new_id = int(''.join([self.id, partner.id]))
+        if new_id > 9:
+            self._child_name(new_id)
+        new = Bug(new_id)
+        self.mtx.mtx[rand_idx1][rand_idx2].append(new)
+        self.mtx._bugs.append((new.id, new))
+        new._location(self.mtx)
+
+    def _child_name(self, new_id):
+        """."""
+        r = 0
+        while new_id:
+            r, new_id = r + new_id % 10, new_id // 10
+        return r
 
     def _countdown(self):
         """Manage life force."""
