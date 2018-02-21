@@ -68,19 +68,24 @@ class Bug(object):
             bug._starving()
             return
         for bug in self.mtx._bugs:
+            if bug[1].countdown == 1000:
+                bug[1].mature = True
             # if bug is hungry and there is food #
             if bug[1].countdown >= 500:
                 bug[1]._hungry
                 bug[1]._starving()
                 return
+            if bug[1].mature and bug[1].countdown <= 200:
+                # time to breed #
+                bug[1].in_heat = True
+                bug[1]._find_partner()
+            elif bug[1].mature and bug[1].countdown > 200:
+                bug[1].hungry = True
             if bug[1].hungry:
                 bug[1]._get_food()
             elif not bug[1].hungry:
                 bug[1]._hungry()
-            mature = bug[1].count - bug[1].countdown
-            if mature >= bug[1].countdown and bug[1].count > 100:
-                # time to breed #
-                bug[1]._find_partner()
+
             # ----- For queen... ----- #
             # if bug[1].id == 1:
             #     bug[1]._move_random()
