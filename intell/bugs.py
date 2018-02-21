@@ -31,20 +31,19 @@ class Bug(object):
 
     def _move_all_together(self):
         """For each bug call move together."""
-        # ## auto feed from bug 1 ## #
-        # if self.hungry:
-        #     if len(self.mtx._food) == 0:
-        #         models.feed(self.mtx)
+        # ---- auto feed from bug 1 ---- #
+        if self.mtx._bugs[0][1].hungry:
+            if len(self.mtx._food) == 0:
+                if self.mtx._bugs[0][1].countdown < 470:
+                    models.feed(self.mtx)
+        # ------------------------------ #
         if len(self.mtx._bugs) == 0:
             return
         if len(self.mtx._bugs) == 1:
             bug = self.mtx._bugs[0][1]
             bug._hungry
-            if bug.hungry:
-                bug._get_food()
-            if bug.countdown >= 500:
-                bug._starving()
-                return
+            bug._get_food()
+            bug._starving()
             return
         for bug in self.mtx._bugs:
             # if bug is hungry and there is food #

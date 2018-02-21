@@ -37,6 +37,7 @@ def index(request):  # pragma no cover
         if request.method == 'POST':
             feed(MTX)
         bug = MTX._bugs[0][1].count
+        countdown = MTX._bugs[0][1].countdown
         try:
             MTX._bugs[0][1]._move_all_together()
             bugs = len(MTX._bugs)
@@ -48,6 +49,7 @@ def index(request):  # pragma no cover
             'matrix': MTX.mtx,
             'bugs': bugs,
             'bug': bug,
+            'cd': countdown,
         })
     elif len(MTX._bugs) == 0:
         return redirect(reverse('homenobugs'))
