@@ -6,14 +6,17 @@
 
 {% block content %}
   <div class="">
+    {% if old %}
+      {{ old }}
+    {% endif %}
     {% if bug %}
       {{ bug }}
     {% endif %}
     {% if cd %}
       {{ cd }}
     {% endif %}
-    {% if id %}
-      {{ id }}
+    {% if young %}
+      {{ young }}
     {% endif %}
     {% if bugs %}
       <h3>Moving...</h3>
