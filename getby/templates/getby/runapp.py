@@ -1,3 +1,5 @@
+"""."""
+
 import os
 
 from paste.deploy import loadapp
