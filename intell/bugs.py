@@ -1,7 +1,6 @@
 """Intelligent bugs."""
 
 import random
-from . import models
 
 
 class Bug(object):
