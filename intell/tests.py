@@ -87,7 +87,7 @@ class ProfileTestCase(TestCase):
         self.std_mtx._bugs.append((new.id, new))
         new._location(self.std_mtx)
         new._directions()
-        assert new.directions == [[0, 1], [1, 0], [1, 1]]
+        assert sorted(new.directions) == [[0, 1], [1, 0], [1, 1]]
 
     def test_bug_directions_bug1_00_bug2_11(self):
         """."""
