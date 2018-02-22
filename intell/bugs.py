@@ -85,8 +85,8 @@ class Bug(object):
             if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
             if bug[1].count >= 4000:
-                bug[1]._starving()
-                continue
+                bug[1].countdown += 500
+                bug[1].hungry = True
             # if bug is hungry and there is food #
             if bug[1].hungry:
                 if bug[1].countdown > 500:
@@ -245,8 +245,8 @@ class Bug(object):
         while self.mtx.mtx[rand_idx1][rand_idx2]:
             rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
             rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        new_id = int(''.join([str(self.id), str(partner.id)]))
-        self._child_name(new_id)
+        new_id = int(''.join([str(self.id)[0], str(partner.id)[0]]))
+        # self._child_name(new_id)
         new = Bug(new_id)
         new.gen = GEN[GEN.index(self.gen) + 1]
         self.mtx.mtx[rand_idx1][rand_idx2].append(new)
