@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from urllib.parse import parse_qs, urlparse
 from django.shortcuts import redirect, reverse
 
-MTX = start(9, 20)
+MTX = start(9, 18)
 
 
 @csrf_protect

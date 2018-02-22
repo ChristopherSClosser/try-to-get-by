@@ -62,14 +62,15 @@ class Bug(object):
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
         self.count += 1
+        self.countdown += 1
 
     def _move_all_together(self):
         """For each bug call move together."""
         # ------------- auto feed from bug 1 ------------- #
-        # if self.mtx._bugs[0][1].hungry:
-        #     if len(self.mtx._food) == 0:
-        #         if self.mtx._bugs[0][1].countdown < 470:
-        #             models.feed(self.mtx)
+        if self.mtx._bugs[0][1].hungry:
+            # if len(self.mtx._food) == 0:
+            if self.mtx._bugs[0][1].countdown < 470:
+                models.feed(self.mtx, 1)
         # ------------------------------------------------ #
         if len(self.mtx._bugs) == 0:
             return
@@ -80,45 +81,50 @@ class Bug(object):
             bug._starving()
             return
         for bug in self.mtx._bugs:
+            bug[1]._hungry()
             if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
             if bug[1].count >= 4000:
-                bug[1].countdown += 400
                 bug[1]._starving()
+                continue
             # if bug is hungry and there is food #
             if bug[1].hungry:
+                if bug[1].countdown > 500:
+                    bug[1]._starving()
+                    continue
                 bug[1]._get_food()
+                continue
             # elif not bug[1].hungry:
             #     bug[1]._hungry()
-            if bug[1].countdown >= 500:
-                bug[1]._hungry
+            if bug[1].countdown > 500:
                 bug[1]._starving()
-                return
+                continue
             if bug[1].mature and bug[1].countdown > 200:
                 bug[1].hungry = True
                 bug[1]._get_food()
                 bug[1].hungry = True
-                # return
+                continue
             elif bug[1].mature and bug[1].countdown <= 200:
                 # time to breed #
                 bug[1].in_heat = True
                 bug[1]._find_partner()
+                bug[1].hungry = True
+                bug[1]._get_food()
+                continue
             # ----- For queen... ----- #
             # if bug[1].id == 1:
             #     bug[1]._move_random()
             #     continue
             # ------------------------ #
-            bug[1].rand_int = random.randrange(10)
             if len(bug[1].directions) > 1 and not bug[1].hungry:
                 bug[1]._get_together()
-            elif len(bug[1].directions) == 1:
+            elif len(bug[1].directions) == 1 and bug in self.mtx._bugs:
                 move_to = bug[1].directions[0]
                 bug[1]._move(move_to)
-            bug[1].countdown += 1
 
     def _get_food(self):
         """Move towards food."""
-        if self.mtx._food:
+        if len(self.mtx._food) > 0:
             food = self.mtx._food[0]
             move_to_x = food.idx['x']
             move_to_y = food.idx['y']
@@ -126,7 +132,7 @@ class Bug(object):
             if move_to:
                 self._move(move_to)
         else:
-            self._move_random()
+            self._get_together()
 
     def _get_together(self):
         """
@@ -177,9 +183,12 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
-        rand_idx = random.randrange(len(self.directions))
-        move_to = self.directions[rand_idx]
-        self._move(move_to)
+        try:
+            rand_idx = random.randrange(len(self.directions) - 1)
+            move_to = self.directions[rand_idx]
+            self._move(move_to)
+        except:
+            pass
 
     def _location(self, mtx):
         """
@@ -198,7 +207,7 @@ class Bug(object):
     def _hungry(self):
         """Make hungry true @ chosen interval."""
         if (
-            self.count % 90 == 0 and self.countdown > 50
+            self.count % 80 == 0 and self.countdown > 50
             or self.mature is True and self.countdown > 200
             or self.countdown > 475
         ):
@@ -209,7 +218,7 @@ class Bug(object):
         if self.hungry:
             if self.countdown < 250:
                 self.hungry = False
-            self.countdown -= 70
+            self.countdown -= 50
             self._countdown()
             food._size -= 1
             food.size()
@@ -259,15 +268,15 @@ class Bug(object):
 
     def _starving(self):
         """What happens in death."""
-        if self.mtx._food:
-            # self.countdown -= 1
-            # self._countdown()
-            self._get_food()
+        # if self.mtx._food:
+        #     # self.countdown -= 1
+        #     # self._countdown()
+        #     self._get_food()
+        #     return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
                 self.mtx._bugs.remove(bug)
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-        return
 
     def _directions(self):
         """

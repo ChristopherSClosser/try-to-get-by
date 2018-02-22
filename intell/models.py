@@ -68,7 +68,7 @@ def feed(grid, size=10):
     ]
     Food will be randomly placed.
     """
-    for _ in range(3):
+    for _ in range(2):
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
         while grid.mtx[rand_idx1][rand_idx2]:
