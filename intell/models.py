@@ -13,6 +13,7 @@ class Matrix(models.Model):
         """."""
         super().__init__(*args, **kwargs)
         self._bugs = []
+        self.count = 0
         self._size = _size
         self._food = []
         self.mtx = [
@@ -68,20 +69,20 @@ def feed(grid, size=10):
     ]
     Food will be randomly placed.
     """
-    for _ in range(2):
+    # for _ in range(2):
+    rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+    rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
+    while grid.mtx[rand_idx1][rand_idx2]:
         rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
         rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        while grid.mtx[rand_idx1][rand_idx2]:
-            rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
-            rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        new = Food(grid, size)
-        grid.mtx[rand_idx1][rand_idx2].append(new)
-        new.fid = len(grid._food)
-        grid._food.append(new)
-        new._location()
+    new = Food(grid, size)
+    grid.mtx[rand_idx1][rand_idx2].append(new)
+    new.fid = len(grid._food)
+    grid._food.append(new)
+    new._location()
 
 
-def start(bugs=2, size='small'):
+def start(bugs=3, size='small'):
     """
     Init matrix and bugs.
 

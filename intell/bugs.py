@@ -4,7 +4,7 @@ import random
 from . import models
 
 
-GEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+GEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
 
 class Bug(object):
@@ -22,11 +22,6 @@ class Bug(object):
         self.count = 0
         self.rand_int = 0
         self.countdown = 0
-
-    # def _gen(self):
-    #     """."""
-    #     x = len(list(str(self.id)))
-    #     return GEN[x - 1]
 
     def _move_all_random(self):
         """For each bug call to move random."""
@@ -67,42 +62,45 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         # ------------- auto feed from bug 1 ------------- #
-        # if self.mtx._bugs[0][1].hungry:
-        #     # if len(self.mtx._food) == 0:
-        #     if self.mtx._bugs[0][1].countdown < 470:
-        #         models.feed(self.mtx, 1)
+        if self.mtx._bugs[0][1].hungry:
+            if len(self.mtx._food) <= 10:
+                models.feed(self.mtx, 1)
+            if self.mtx._bugs[0][1].countdown < 470:
+                models.feed(self.mtx, 1)
         # ------------------------------------------------ #
         if len(self.mtx._bugs) == 0:
             return
         if len(self.mtx._bugs) == 1:
             bug = self.mtx._bugs[0][1]
+            bug.countdown += 100
             bug._hungry
             bug._get_food()
             bug._starving()
-            return
+            bug._move_random()
+            # return
         for bug in self.mtx._bugs:
             bug[1]._hungry()
             if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
-            if bug[1].count >= 4000:
-                bug[1].countdown += 500
-                bug[1].hungry = True
+            if bug[1].count >= 4000 or bug[1].countdown >= 500:
+                bug[1]._starving()
+                continue
             # if bug is hungry and there is food #
             if bug[1].hungry:
-                if bug[1].countdown > 500:
-                    bug[1]._starving()
-                    continue
+                # if bug[1].countdown > 500:
+                #     bug[1]._starving()
+                #     continue
                 bug[1]._get_food()
                 continue
             # elif not bug[1].hungry:
             #     bug[1]._hungry()
-            if bug[1].countdown > 500:
-                bug[1]._starving()
-                continue
+            # if bug[1].countdown > 500:
+            #     bug[1]._starving()
+            #     continue
             if bug[1].mature and bug[1].countdown > 200:
                 bug[1].hungry = True
                 bug[1]._get_food()
-                bug[1].hungry = True
+                # bug[1].hungry = True
                 continue
             elif bug[1].mature and bug[1].countdown <= 200:
                 # time to breed #
@@ -116,11 +114,14 @@ class Bug(object):
             #     bug[1]._move_random()
             #     continue
             # ------------------------ #
-            if len(bug[1].directions) > 1 and not bug[1].hungry:
-                bug[1]._get_together()
-            elif len(bug[1].directions) == 1 and bug in self.mtx._bugs:
-                move_to = bug[1].directions[0]
-                bug[1]._move(move_to)
+            if len(self.mtx._bugs) >= 1:
+                if len(bug[1].directions) > 1 and not bug[1].hungry:
+                    bug[1]._get_together()
+                    continue
+                elif len(bug[1].directions) == 1 and bug in self.mtx._bugs:
+                    move_to = bug[1].directions[0]
+                    bug[1]._move(move_to)
+                    continue
 
     def _get_food(self):
         """Move towards food."""
@@ -141,11 +142,11 @@ class Bug(object):
         Pick index to move to where the difference between
         sums is the least.
         """
-        if len(self.mtx._bugs) > 0:
-            rand = random.randrange(len(self.mtx._bugs))
+        if len(self.mtx._bugs) > 1:
+            rand = random.randrange(len(self.mtx._bugs) - 1)
             rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen
             while rand_bug[1] == self:
-                rand = random.randrange(len(self.mtx._bugs))
+                rand = random.randrange(len(self.mtx._bugs) - 1)
                 rand_bug = self.mtx._bugs[rand]
             move_to_x = rand_bug[1].idx['x']
             move_to_y = rand_bug[1].idx['y']
@@ -198,6 +199,7 @@ class Bug(object):
         Initiated by start(no. of bugs, size of matrix)...
         """
         self.mtx = mtx
+        self.mtx.count += 1
         self.idx = {}
         for subarray in self.mtx.mtx:
             if [self] in subarray:
@@ -245,21 +247,13 @@ class Bug(object):
         while self.mtx.mtx[rand_idx1][rand_idx2]:
             rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
             rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        new_id = int(''.join([str(self.id)[0], str(partner.id)[0]]))
-        # self._child_name(new_id)
-        new = Bug(new_id)
+        # new_id = int(''.join([str(self.id)[0], str(partner.id)[0]]))
+        new = Bug(self.mtx.count + 1)
         new.gen = GEN[GEN.index(self.gen) + 1]
         self.mtx.mtx[rand_idx1][rand_idx2].append(new)
         self.mtx._bugs.append((new.id, new))
         new._location(self.mtx)
         self._directions()
-
-    def _child_name(self, new_id):
-        """."""
-        r = 0
-        while new_id:
-            r, new_id = r + new_id % 10, new_id // 10
-        return r
 
     def _countdown(self):
         """Manage life force."""
@@ -275,8 +269,12 @@ class Bug(object):
         #     return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
+                try:
+                    self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
+                except ValueError:
+                    import pdb; pdb.set_trace()
+                    pass
                 self.mtx._bugs.remove(bug)
-        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
 
     def _directions(self):
         """

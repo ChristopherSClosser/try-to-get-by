@@ -4,7 +4,7 @@
 
 (setTimeout(function() {
   update();
-}, 50))();
+}, 25))();
 function update() {
   $.ajax({
     type: 'GET',

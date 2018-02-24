@@ -25,18 +25,18 @@ class ProfileTestCase(TestCase):
         """."""
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
-
-    def test_intell_view_200(self):
-        """."""
-        c = Client()
-        res = c.get('/intell/')
-        assert res.status_code == 200
-
-    def test_intell_view_has_title(self):
-        """."""
-        c = Client()
-        res = c.get('/intell/')
-        assert b'<title>The start</title>' in res.content
+    #
+    # def test_intell_view_200(self):
+    #     """."""
+    #     c = Client()
+    #     res = c.get('/intell/')
+    #     assert res.status_code == 200
+    #
+    # def test_intell_view_has_title(self):
+    #     """."""
+    #     c = Client()
+    #     res = c.get('/intell/')
+    #     assert b'<title>The start</title>' in res.content
 
     def test_std_matrix_init_bugs(self):
         """test_std_matrix_init_bugs."""
@@ -235,7 +235,7 @@ class ProfileTestCase(TestCase):
     def test_matrix_standard_bug_list(self):
         """."""
         res = self.std_start._bugs
-        assert len(res) == 2
+        assert len(res) == 3
 
     def test_matrix_more_bugs_list(self):
         """."""
@@ -272,10 +272,10 @@ class ProfileTestCase(TestCase):
 
     def test_matrix_move_together_feed(self):
         """."""
-        mtx = models.start(2, 10)
+        mtx = models.start(9, 10)
         models.feed(mtx)
         for _ in range(500):
-            if _ % 50 == 0:
+            if mtx._bugs[0][1].hungry:
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert mtx._bugs
@@ -285,18 +285,22 @@ class ProfileTestCase(TestCase):
         mtx = models.start(5, 10)
         models.feed(mtx)
         bug = mtx._bugs[0][1]
-        for _ in range(2000):
-            if bug.countdown % 50 == 0:
+        for _ in range(5000):
+            if len(mtx._bugs) <= 2:
+                models.feed(mtx)
+            if bug.hungry:
                 models.feed(mtx)
             bug._move_all_together()
         assert mtx
 
     def test_matrix_move_together_little_food_2(self):
         """."""
-        mtx = models.start(5, 10)
+        mtx = models.start(9, 10)
         models.feed(mtx)
         bug = mtx._bugs[0][1]
         for _ in range(1000):
+            if len(mtx._bugs) <= 2:
+                break
             if bug.countdown == 500:
                 models.feed(mtx)
             bug._move_all_together()
@@ -308,11 +312,12 @@ class ProfileTestCase(TestCase):
         models.feed(mtx)
         bug = mtx._bugs[0][1]
         for _ in range(2000):
-            if len(mtx._bugs) <= 1:
+            if len(mtx._bugs) <= 2:
                 break
             if bug.countdown == 475:
                 models.feed(mtx)
             bug._move_all_together()
+        models.feed(mtx)
         assert mtx
 
     def test_matrix_move_together_no_food(self):
