@@ -68,25 +68,6 @@ class Bug(object):
         #     if self.mtx._bugs[0][1].countdown < 470:
         #         models.feed(self.mtx, 1)
         # ------------------------------------------------ #
-        # if len(self.mtx._bugs) == 0:
-        #     return
-        # if len(self.mtx._bugs) == 1:
-        #     import pdb; pdb.set_trace()
-        #     bug = self.mtx._bugs[0][1]
-        #     # bug.countdown += 100
-        #     bug._hungry
-        #     bug._get_food()
-        #     # bug._starving()
-        #     bug._move_random()
-        #     return
-        # if len(self.mtx._bugs) == 2:
-        #     import pdb; pdb.set_trace()
-        #     bug1 = self.mtx._bugs[0][1]
-        #     bug1._get_food()
-        #     bug1._move_random()
-        #     bug2 = self.mtx._bugs[1][1]
-        #     bug2._get_together()
-        #     return
 
         for bug in self.mtx._bugs:
             if len(self.mtx._bugs) == 1:
@@ -129,7 +110,6 @@ class Bug(object):
             #     bug[1]._move_random()
             #     continue
             # ------------------------ #
-                # import pdb; pdb.set_trace()
             if len(self.mtx._bugs) > 2:
                 if len(bug[1].directions) > 1 and not bug[1].hungry:
                     bug[1]._get_together()
@@ -251,7 +231,6 @@ class Bug(object):
 
     def _breed(self, partner):
         """How to breed."""
-        # import pdb; pdb.set_trace()
         self.in_heat = False
         self.mature = False
         self.countdown += 200
@@ -263,7 +242,6 @@ class Bug(object):
         while self.mtx.mtx[rand_idx1][rand_idx2]:
             rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
             rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        # new_id = int(''.join([str(self.id)[0], str(partner.id)[0]]))
         new = Bug(self.mtx.count + 1)
         new.gen = GEN[GEN.index(self.gen) + 1]
         self.mtx.mtx[rand_idx1][rand_idx2].append(new)
@@ -278,11 +256,6 @@ class Bug(object):
 
     def _starving(self):
         """What happens in death."""
-        # if self.mtx._food:
-        #     # self.countdown -= 1
-        #     # self._countdown()
-        #     self._get_food()
-        #     return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
                 self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
@@ -319,8 +292,10 @@ class Bug(object):
             if len(mtx[x + 1][y + 1]) == 0:
                 bug[1].directions.append([x + 1, y + 1])
             elif len(mtx[x + 1][y + 1]) == 1:
-                if type(mtx[x + 1][y + 1][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if (
+                    type(mtx[x + 1][y + 1][0]).__name__ == 'Food'
+                    and bug[1].hungry
+                ):
                     bug[1]._eat(mtx[x + 1][y + 1][0])
         except IndexError:
             pass
@@ -331,8 +306,7 @@ class Bug(object):
             if len(mtx[x + 1][y]) == 0:
                 bug[1].directions.append([x + 1, y])
             elif len(mtx[x + 1][y]) == 1:
-                if type(mtx[x + 1][y][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if type(mtx[x + 1][y][0]).__name__ == 'Food' and bug[1].hungry:
                     bug[1]._eat(mtx[x + 1][y][0])
         except IndexError:
             pass
@@ -343,8 +317,7 @@ class Bug(object):
             if len(mtx[x][y + 1]) == 0:
                 bug[1].directions.append([x, y + 1])
             elif len(mtx[x][y + 1]) == 1:
-                if type(mtx[x][y + 1][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if type(mtx[x][y + 1][0]).__name__ == 'Food' and bug[1].hungry:
                     bug[1]._eat(mtx[x][y + 1][0])
         except IndexError:
             pass
@@ -359,8 +332,10 @@ class Bug(object):
             if len(mtx[x - 1][y - 1]) == 0:
                 bug[1].directions.append([x - 1, y - 1])
             elif len(mtx[x - 1][y - 1]) == 1:
-                if type(mtx[x - 1][y - 1][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if (
+                    type(mtx[x - 1][y - 1][0]).__name__ == 'Food'
+                    and bug[1].hungry
+                ):
                     bug[1]._eat(mtx[x - 1][y - 1][0])
 
     def _neg_x(self, bug, mtx, x, y):
@@ -369,16 +344,17 @@ class Bug(object):
             if len(mtx[x - 1][y + 1]) == 0:
                 bug[1].directions.append([x - 1, y + 1])
             elif len(mtx[x - 1][y + 1]) == 1:
-                if type(mtx[x - 1][y + 1][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if (
+                    type(mtx[x - 1][y + 1][0]).__name__ == 'Food'
+                    and bug[1].hungry
+                ):
                     bug[1]._eat(mtx[x - 1][y + 1][0])
         except IndexError:
             pass
         if len(mtx[x - 1][y]) == 0:
             bug[1].directions.append([x - 1, y])
         elif len(mtx[x - 1][y]) == 1:
-            if type(mtx[x - 1][y][0]).__name__ == 'Food':
-                bug[1]._hungry()
+            if type(mtx[x - 1][y][0]).__name__ == 'Food' and bug[1].hungry:
                 bug[1]._eat(mtx[x - 1][y][0])
 
     def _neg_y(self, bug, mtx, x, y):
@@ -387,14 +363,16 @@ class Bug(object):
             if len(mtx[x + 1][y - 1]) == 0:
                 bug[1].directions.append([x + 1, y - 1])
             elif len(mtx[x + 1][y - 1]) == 1:
-                if type(mtx[x + 1][y - 1][0]).__name__ == 'Food':
-                    bug[1]._hungry()
+                if (
+                    type(mtx[x + 1][y - 1][0]).__name__ == 'Food'
+                    and bug[1].hungry
+                ):
                     bug[1]._eat(mtx[x + 1][y - 1][0])
         except IndexError:
             pass
         if len(mtx[x][y - 1]) == 0:
             bug[1].directions.append([x, y - 1])
         elif len(mtx[x][y - 1]) == 1:
-            if type(mtx[x][y - 1][0]).__name__ == 'Food':
+            if type(mtx[x][y - 1][0]).__name__ == 'Food' and bug[1].hungry:
                 bug[1]._hungry()
                 bug[1]._eat(mtx[x][y - 1][0])
