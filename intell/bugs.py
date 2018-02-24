@@ -4,7 +4,7 @@ import random
 from . import models
 
 
-GEN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+GEN = '''!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}'''
 
 
 class Bug(object):
@@ -68,17 +68,41 @@ class Bug(object):
         #     if self.mtx._bugs[0][1].countdown < 470:
         #         models.feed(self.mtx, 1)
         # ------------------------------------------------ #
-        if len(self.mtx._bugs) == 0:
-            return
-        if len(self.mtx._bugs) == 1:
-            bug = self.mtx._bugs[0][1]
-            bug.countdown += 100
-            bug._hungry
-            bug._get_food()
-            bug._starving()
-            bug._move_random()
-            # return
+        # if len(self.mtx._bugs) == 0:
+        #     return
+        # if len(self.mtx._bugs) == 1:
+        #     import pdb; pdb.set_trace()
+        #     bug = self.mtx._bugs[0][1]
+        #     # bug.countdown += 100
+        #     bug._hungry
+        #     bug._get_food()
+        #     # bug._starving()
+        #     bug._move_random()
+        #     return
+        # if len(self.mtx._bugs) == 2:
+        #     import pdb; pdb.set_trace()
+        #     bug1 = self.mtx._bugs[0][1]
+        #     bug1._get_food()
+        #     bug1._move_random()
+        #     bug2 = self.mtx._bugs[1][1]
+        #     bug2._get_together()
+        #     return
+
         for bug in self.mtx._bugs:
+            if len(self.mtx._bugs) == 1:
+                if bug[1].countdown >= 500:
+                    bug[1]._starving()
+                    continue
+                move_to = bug[1].directions[0]
+                bug[1]._move(move_to)
+                continue
+            if len(self.mtx._bugs) == 2 and len(bug[1].directions) > 0:
+                if bug[1].countdown >= 500:
+                    bug[1]._starving()
+                    continue
+                move_to = bug[1].directions[0]
+                bug[1]._move(move_to)
+                continue
             bug[1]._hungry()
             if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
@@ -87,20 +111,11 @@ class Bug(object):
                 continue
             # if bug is hungry and there is food #
             if bug[1].hungry:
-                # if bug[1].countdown > 500:
-                #     bug[1]._starving()
-                #     continue
                 bug[1]._get_food()
                 continue
-            # elif not bug[1].hungry:
-            #     bug[1]._hungry()
-            # if bug[1].countdown > 500:
-            #     bug[1]._starving()
-            #     continue
             if bug[1].mature and bug[1].countdown > 200:
                 bug[1].hungry = True
                 bug[1]._get_food()
-                # bug[1].hungry = True
                 continue
             elif bug[1].mature and bug[1].countdown <= 200:
                 # time to breed #
@@ -114,7 +129,8 @@ class Bug(object):
             #     bug[1]._move_random()
             #     continue
             # ------------------------ #
-            if len(self.mtx._bugs) >= 1:
+                # import pdb; pdb.set_trace()
+            if len(self.mtx._bugs) > 2:
                 if len(bug[1].directions) > 1 and not bug[1].hungry:
                     bug[1]._get_together()
                     continue
@@ -269,10 +285,7 @@ class Bug(object):
         #     return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
-                try:
-                    self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-                except ValueError:
-                    pass
+                self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
                 self.mtx._bugs.remove(bug)
 
     def _directions(self):

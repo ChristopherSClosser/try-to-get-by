@@ -286,13 +286,14 @@ class ProfileTestCase(TestCase):
         models.feed(mtx)
         bug = mtx._bugs[0][1]
         count = 0
-        for _ in range(5000):
+        for _ in range(10000):
             count += 1
-            print(count, len(mtx._bugs))
-            if len(mtx._bugs) <= 2:
+            if count % 100 == 0:
+                print(count, len(mtx._bugs), len(mtx._food))
+            if len(mtx._bugs) == 0:
                 break
-            if bug.countdown >= 400:
-                models.feed(mtx)
+            if bug.hungry and len(mtx._food) < 5:
+                models.feed(mtx, 2)
             bug._move_all_together()
         assert mtx
 
@@ -304,11 +305,12 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(1000):
             count += 1
-            print(count, len(mtx._bugs))
-            if len(mtx._bugs) <= 2:
+            if count % 100 == 0:
+                print(count, len(mtx._bugs))
+            if len(mtx._bugs) == 0:
                 break
-            if bug.countdown == 490:
-                models.feed(mtx)
+            if bug.countdown == 496:
+                models.feed(mtx, 2)
             bug._move_all_together()
         assert mtx
 
