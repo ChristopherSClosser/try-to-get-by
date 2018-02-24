@@ -3,22 +3,23 @@
 ---
 ### Description
 
-Version: *pre-beta*
+Version: *beta 0.0.1*
 
 An Experiment...
 
-### Authors
+### Author
 ---
 * [ChristopherSClosser](https://github.com/ChristopherSClosser/try-to-get-by)
 
+<br/>
 ### Dependencies
 ---
 * http
 * shortcuts
-* generic
 * contrib
 * Django
 
+<br/>
 ### Getting Started
 ---
 ##### *Prerequisites*
@@ -27,7 +28,7 @@ An Experiment...
 * [git](https://git-scm.com/)
 
 ##### *Installation*
-First, clone the project repo from Github. Then, change directories into the cloned repository. To accomplish this, execute these commands:
+First, clone or fork the project repo from Github. Then, change directories into the cloned repository. To accomplish this, execute these commands from your terminal:
 
 `$ git clone https://github.com/ChristopherSClosser/try-to-get-by.git`
 
@@ -44,6 +45,9 @@ Now now that you have cloned your repo and changed directories into the project,
 Once you have cloned the application and installed the requirements, you can serve the project on your local machine by executing this command from your terminal, on the same level as `manage.py`.
 `$ ./manage.py runserver`
 Once you have executed this command, open your browser, and go to `localhost:8000/`.
+Currently the bug and size selectors are not functioning, but click the run button and the standard 18x18 matrix with 9 bugs will start. Make sure you click the feed button often or they will die.
+
+<br/>
 ### Test Suite
 ---
 ##### *Running Tests*
@@ -57,25 +61,31 @@ The testing files for this project are:
 |:---:|:---:|
 | `./intell/tests.py` | Test intell. |
 
+<br/>
 ### URLs
 ---
 The URLS for this project can be found in the following modules:
 
 | URL module | Description |
 |:---:|:---:|
-| ./intell/urls.py |  |
-| ./getby/urls.py | getby URL ConfigurationThe `urlpatterns` list routes URLs to views. For more information please see:https://docs.djangoproject.com/en/2.0/topics/http/urls/Examples:Function views1. Add an import:  from my_app import views2. Add a URL to urlpatterns:  path('', views.home, name='home')Class-based views1. Add an import:  from other_app.views import Home2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')Including another URLconf1. Import the include() function: from django.urls import include, path2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))from django.contrib import adminfrom django.conf.urls import include, urlfrom getby.views import HomeViewurlpatterns = [url(r'^$', HomeView.as_view(), name='home'),url(r'^intell/', include('intell.urls')),url(r'^admin/', admin.site.urls),] |
+| ./intell/urls.py | intell URL Configuration |
+| ./getby/urls.py | getby URL Configuration |
 
+<br/>
 ### Development Tools
 ---
 * *python* - programming language
 * *django* - web framework
+* *jQuery* - programming language
 
+<br/>
 ### License
 ---
 This project is licensed under MIT License - see the LICENSE.md file for details.
+
+<br/>
 ### Acknowledgements
 ---
-* Coffee
 
-*This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
+<p style="text-align: center;">*This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
+</p>

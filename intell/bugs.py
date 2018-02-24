@@ -4,7 +4,10 @@ import random
 from . import models
 
 
-GEN = '''!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}'''
+GEN = '''
+    !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]
+    ^_`abcdefghijklmnopqrstuvwxyz{|}
+'''
 
 
 class Bug(object):
