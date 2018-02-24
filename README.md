@@ -96,6 +96,9 @@ This project is licensed under MIT License - see the LICENSE.md file for details
 ### Acknowledgements
 ---
 
-<p style="text-align: center;">
+<center>
+  
 *This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
-</p>
+
+</center>
+
