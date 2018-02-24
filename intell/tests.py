@@ -25,18 +25,18 @@ class ProfileTestCase(TestCase):
         """."""
         response = HomeView()
         assert response.template_name == 'getby/homepage.html'
-    #
-    # def test_intell_view_200(self):
-    #     """."""
-    #     c = Client()
-    #     res = c.get('/intell/')
-    #     assert res.status_code == 200
-    #
-    # def test_intell_view_has_title(self):
-    #     """."""
-    #     c = Client()
-    #     res = c.get('/intell/')
-    #     assert b'<title>The start</title>' in res.content
+
+    def test_intell_view_200(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert res.status_code == 200
+
+    def test_intell_view_has_title(self):
+        """."""
+        c = Client()
+        res = c.get('/intell/')
+        assert b'<title>The start</title>' in res.content
 
     def test_std_matrix_init_bugs(self):
         """test_std_matrix_init_bugs."""
