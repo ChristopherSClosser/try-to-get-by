@@ -184,7 +184,7 @@ class Bug(object):
             rand_idx = random.randrange(len(self.directions) - 1)
             move_to = self.directions[rand_idx]
             self._move(move_to)
-        except:
+        except ValueError:
             pass
 
     def _location(self, mtx):
@@ -374,5 +374,4 @@ class Bug(object):
             bug[1].directions.append([x, y - 1])
         elif len(mtx[x][y - 1]) == 1:
             if type(mtx[x][y - 1][0]).__name__ == 'Food' and bug[1].hungry:
-                bug[1]._hungry()
                 bug[1]._eat(mtx[x][y - 1][0])
