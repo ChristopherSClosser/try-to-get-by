@@ -7,11 +7,14 @@ Version: *beta 0.0.1*
 
 An Experiment...
 
+<br/>
+
 ### Author
 ---
 * [ChristopherSClosser](https://github.com/ChristopherSClosser/try-to-get-by)
 
 <br/>
+
 ### Dependencies
 ---
 * http
@@ -20,6 +23,7 @@ An Experiment...
 * Django
 
 <br/>
+
 ### Getting Started
 ---
 ##### *Prerequisites*
@@ -48,6 +52,7 @@ Once you have executed this command, open your browser, and go to `localhost:800
 Currently the bug and size selectors are not functioning, but click the run button and the standard 18x18 matrix with 9 bugs will start. Make sure you click the feed button often or they will die.
 
 <br/>
+
 ### Test Suite
 ---
 ##### *Running Tests*
@@ -62,6 +67,7 @@ The testing files for this project are:
 | `./intell/tests.py` | Test intell. |
 
 <br/>
+
 ### URLs
 ---
 The URLS for this project can be found in the following modules:
@@ -72,6 +78,7 @@ The URLS for this project can be found in the following modules:
 | ./getby/urls.py | getby URL Configuration |
 
 <br/>
+
 ### Development Tools
 ---
 * *python* - programming language
@@ -79,13 +86,16 @@ The URLS for this project can be found in the following modules:
 * *jQuery* - programming language
 
 <br/>
+
 ### License
 ---
 This project is licensed under MIT License - see the LICENSE.md file for details.
 
 <br/>
+
 ### Acknowledgements
 ---
 
-<p style="text-align: center;">*This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
+<p style="text-align: center;">
+*This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
 </p>
