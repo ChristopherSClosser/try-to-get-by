@@ -282,13 +282,16 @@ class ProfileTestCase(TestCase):
 
     def test_matrix_move_together_little_food(self):
         """."""
-        mtx = models.start(5, 10)
+        mtx = models.start(9, 20)
         models.feed(mtx)
         bug = mtx._bugs[0][1]
+        count = 0
         for _ in range(5000):
+            count += 1
+            print(count, len(mtx._bugs))
             if len(mtx._bugs) <= 2:
-                models.feed(mtx)
-            if bug.hungry:
+                break
+            if bug.countdown >= 400:
                 models.feed(mtx)
             bug._move_all_together()
         assert mtx
@@ -298,10 +301,13 @@ class ProfileTestCase(TestCase):
         mtx = models.start(9, 10)
         models.feed(mtx)
         bug = mtx._bugs[0][1]
+        count = 0
         for _ in range(1000):
+            count += 1
+            print(count, len(mtx._bugs))
             if len(mtx._bugs) <= 2:
                 break
-            if bug.countdown == 500:
+            if bug.countdown == 490:
                 models.feed(mtx)
             bug._move_all_together()
         assert mtx

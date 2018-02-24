@@ -62,11 +62,11 @@ class Bug(object):
     def _move_all_together(self):
         """For each bug call move together."""
         # ------------- auto feed from bug 1 ------------- #
-        if self.mtx._bugs[0][1].hungry:
-            if len(self.mtx._food) <= 10:
-                models.feed(self.mtx, 1)
-            if self.mtx._bugs[0][1].countdown < 470:
-                models.feed(self.mtx, 1)
+        # if self.mtx._bugs[0][1].hungry:
+        #     if len(self.mtx._food) <= 10:
+        #         models.feed(self.mtx, 1)
+        #     if self.mtx._bugs[0][1].countdown < 470:
+        #         models.feed(self.mtx, 1)
         # ------------------------------------------------ #
         if len(self.mtx._bugs) == 0:
             return
@@ -272,7 +272,6 @@ class Bug(object):
                 try:
                     self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
                 except ValueError:
-                    import pdb; pdb.set_trace()
                     pass
                 self.mtx._bugs.remove(bug)
 
