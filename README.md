@@ -47,9 +47,12 @@ Now now that you have cloned your repo and changed directories into the project,
 `$ pip install -r requirements.txt`
 ##### *Serving Locally*
 Once you have cloned the application and installed the requirements, you can serve the project on your local machine by executing this command from your terminal, on the same level as `manage.py`.
+
 `$ ./manage.py runserver`
+
 Once you have executed this command, open your browser, and go to `localhost:8000/`.
-Currently the bug and size selectors are not functioning, but click the run button and the standard 18x18 matrix with 9 bugs will start. Make sure you click the feed button often or they will die.
+
+Currently the bug and size selectors are not functioning, but click the run button and a standard 18x18 matrix with 9 bugs will start. Make sure you click the feed button often or they will die.
 
 <br/>
 
