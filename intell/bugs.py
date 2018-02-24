@@ -4,13 +4,20 @@ import random
 from . import models
 
 
+GEN = '''!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}'''
+
+
 class Bug(object):
     """Make a bug."""
 
     def __init__(self, id):
         """Set defaults."""
         self.id = id
+        if self.id < 10:
+            self.gen = GEN[0]
         self.hungry = True
+        self.mature = False
+        self.in_heat = False
         self.directions = []
         self.count = 0
         self.rand_int = 0
@@ -21,6 +28,28 @@ class Bug(object):
         for bug in self.mtx._bugs:
             bug[1]._move_random()
 
+    def _get_move_to(self, move_to_x, move_to_y):
+        """."""
+        move_to = []
+        x = self.idx['x']
+        y = self.idx['y']
+        if x > move_to_x:
+            move_to.append(x - 1)
+        elif x < move_to_x:
+            move_to.append(x + 1)
+        elif x == move_to_x:
+            move_to.append(x)
+        if y > move_to_y:
+            move_to.append(y - 1)
+        elif y < move_to_y:
+            move_to.append(y + 1)
+        elif y == move_to_y:
+            move_to.append(y)
+        if move_to not in self.directions:
+            self._move_random()
+            return
+        return move_to
+
     def _move(self, move_to):
         """Remove and append bug in new location."""
         self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
@@ -28,82 +57,99 @@ class Bug(object):
         self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
         self._directions()
         self.count += 1
+        self.countdown += 1
 
     def _move_all_together(self):
         """For each bug call move together."""
-        # ## auto feed from bug 1 ## #
-        # if self.hungry:
-        #     if len(self.mtx._food) == 0:
-        #         models.feed(self.mtx)
-        if len(self.mtx._bugs) == 0:
-            return
-        if len(self.mtx._bugs) == 1:
-            bug = self.mtx._bugs[0][1]
-            bug._hungry
-            if bug.hungry:
-                bug._get_food()
-            if bug.countdown >= 500:
-                bug._starving()
-                return
-            return
+        # ------------- auto feed from bug 1 ------------- #
+        # if self.mtx._bugs[0][1].hungry:
+        #     if len(self.mtx._food) <= 10:
+        #         models.feed(self.mtx, 1)
+        #     if self.mtx._bugs[0][1].countdown < 470:
+        #         models.feed(self.mtx, 1)
+        # ------------------------------------------------ #
+        # if len(self.mtx._bugs) == 0:
+        #     return
+        # if len(self.mtx._bugs) == 1:
+        #     import pdb; pdb.set_trace()
+        #     bug = self.mtx._bugs[0][1]
+        #     # bug.countdown += 100
+        #     bug._hungry
+        #     bug._get_food()
+        #     # bug._starving()
+        #     bug._move_random()
+        #     return
+        # if len(self.mtx._bugs) == 2:
+        #     import pdb; pdb.set_trace()
+        #     bug1 = self.mtx._bugs[0][1]
+        #     bug1._get_food()
+        #     bug1._move_random()
+        #     bug2 = self.mtx._bugs[1][1]
+        #     bug2._get_together()
+        #     return
+
         for bug in self.mtx._bugs:
-            # if bug is hungry and there is food #
-            if bug[1].countdown >= 500:
-                bug[1]._hungry
+            if len(self.mtx._bugs) == 1:
+                if bug[1].countdown >= 500:
+                    bug[1]._starving()
+                    continue
+                move_to = bug[1].directions[0]
+                bug[1]._move(move_to)
+                continue
+            if len(self.mtx._bugs) == 2 and len(bug[1].directions) > 0:
+                if bug[1].countdown >= 500:
+                    bug[1]._starving()
+                    continue
+                move_to = bug[1].directions[0]
+                bug[1]._move(move_to)
+                continue
+            bug[1]._hungry()
+            if bug[1].count % 1000 == 0 and bug[1].count > 0:
+                bug[1].mature = True
+            if bug[1].count >= 4000 or bug[1].countdown >= 500:
                 bug[1]._starving()
-                return
+                continue
+            # if bug is hungry and there is food #
             if bug[1].hungry:
                 bug[1]._get_food()
-            elif not bug[1].hungry:
-                bug[1]._hungry()
-            # ## For queen... ## #
+                continue
+            if bug[1].mature and bug[1].countdown > 200:
+                bug[1].hungry = True
+                bug[1]._get_food()
+                continue
+            elif bug[1].mature and bug[1].countdown <= 200:
+                # time to breed #
+                bug[1].in_heat = True
+                bug[1]._find_partner()
+                bug[1].hungry = True
+                bug[1]._get_food()
+                continue
+            # ----- For queen... ----- #
             # if bug[1].id == 1:
             #     bug[1]._move_random()
             #     continue
-            bug[1].rand_int = random.randrange(10)
-            if len(bug[1].directions) > 1:
-                bug[1]._get_together()
-            elif len(bug[1].directions) == 1:
-                move_to = bug[1].directions[0]
-                bug[1]._move(move_to)
-                # self.mtx.mtx[bug[1].idx['x']][bug[1].idx['y']].remove(bug[1])
-                # self.mtx.mtx[move_to[0]][move_to[1]].append(bug[1])
-                # bug[1].idx['x'], bug[1].idx['y'] = move_to[0], move_to[1]
-                # self._directions()
-                # bug[1].count += 1
-            bug[1].countdown += 1
+            # ------------------------ #
+                # import pdb; pdb.set_trace()
+            if len(self.mtx._bugs) > 2:
+                if len(bug[1].directions) > 1 and not bug[1].hungry:
+                    bug[1]._get_together()
+                    continue
+                elif len(bug[1].directions) == 1 and bug in self.mtx._bugs:
+                    move_to = bug[1].directions[0]
+                    bug[1]._move(move_to)
+                    continue
 
     def _get_food(self):
         """Move towards food."""
-        if self.mtx._food:
+        if len(self.mtx._food) > 0:
             food = self.mtx._food[0]
             move_to_x = food.idx['x']
             move_to_y = food.idx['y']
-            move_to = []
-            x = self.idx['x']
-            y = self.idx['y']
-            if x > move_to_x:
-                move_to.append(x - 1)
-            elif x < move_to_x:
-                move_to.append(x + 1)
-            elif x == move_to_x:
-                move_to.append(x)
-            if y > move_to_y:
-                move_to.append(y - 1)
-            elif y < move_to_y:
-                move_to.append(y + 1)
-            elif y == move_to_y:
-                move_to.append(y)
-            if move_to not in self.directions:
-                self._move_random()
-                return
-            self._move(move_to)
-            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            # self._directions()
-            # self.count += 1
-            return
+            move_to = self._get_move_to(move_to_x, move_to_y)
+            if move_to:
+                self._move(move_to)
+        else:
+            self._get_together()
 
     def _get_together(self):
         """
@@ -112,39 +158,19 @@ class Bug(object):
         Pick index to move to where the difference between
         sums is the least.
         """
-        if len(self.mtx._bugs) > 0:
-            rand = random.randrange(len(self.mtx._bugs))
+        if len(self.mtx._bugs) > 1:
+            rand = random.randrange(len(self.mtx._bugs) - 1)
             rand_bug = self.mtx._bugs[rand]  # use rand if no queen 0 for queen
-            while rand_bug[1] == self:  # pragma no cover
-                rand = random.randrange(len(self.mtx._bugs))
+            while rand_bug[1] == self:
+                rand = random.randrange(len(self.mtx._bugs) - 1)
                 rand_bug = self.mtx._bugs[rand]
             move_to_x = rand_bug[1].idx['x']
             move_to_y = rand_bug[1].idx['y']
-            move_to = []
-            x = self.idx['x']
-            y = self.idx['y']
-            if x > move_to_x:
-                move_to.append(x - 1)
-            elif x < move_to_x:
-                move_to.append(x + 1)
-            elif x == move_to_x:
-                move_to.append(x)
-            if y > move_to_y:
-                move_to.append(y - 1)
-            elif y < move_to_y:
-                move_to.append(y + 1)
-            elif y == move_to_y:
-                move_to.append(y)
-            if move_to not in self.directions:
-                self._move_random()
-                return
-            self._move(move_to)
-            # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-            # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-            # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-            # self._directions()
-            # self.count += 1
-        # >>>>>>v these methods will take the group into the four corners #
+            move_to = self._get_move_to(move_to_x, move_to_y)
+            if move_to:
+                self._move(move_to)
+            return
+        # ----- these methods will take the group into the four corners ----- #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
         #     for idx in self.directions:  # move to 0, 0
@@ -165,7 +191,7 @@ class Bug(object):
         #     index_min = rand_idx
         # # now perform move #
         # move_to = self.directions[index_min]
-        # >>>>>>^ ######################################################
+        # ------------------------------------------------------------------- #
 
     def _move_random(self):
         """
@@ -174,18 +200,12 @@ class Bug(object):
         When called the matrix will be a part of the bug passed in...
         Choose random index to move to
         """
-        # if len(self.directions)
         try:
-            rand_idx = random.randrange(len(self.directions))
-        except:  # pragma no cover
-            return
-        move_to = self.directions[rand_idx]
-        self._move(move_to)
-        # self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-        # self.mtx.mtx[move_to[0]][move_to[1]].append(self)
-        # self.idx['x'], self.idx['y'] = move_to[0], move_to[1]
-        # self._directions()
-        # self.count += 1
+            rand_idx = random.randrange(len(self.directions) - 1)
+            move_to = self.directions[rand_idx]
+            self._move(move_to)
+        except:
+            pass
 
     def _location(self, mtx):
         """
@@ -195,6 +215,7 @@ class Bug(object):
         Initiated by start(no. of bugs, size of matrix)...
         """
         self.mtx = mtx
+        self.mtx.count += 1
         self.idx = {}
         for subarray in self.mtx.mtx:
             if [self] in subarray:
@@ -203,17 +224,52 @@ class Bug(object):
 
     def _hungry(self):
         """Make hungry true @ chosen interval."""
-        if self.count % 100 == 0 and self.countdown > 50 or self.countdown > 475:
+        if (
+            self.count % 80 == 0 and self.countdown > 50
+            or self.mature is True and self.countdown > 200
+            or self.countdown > 475
+        ):
             self.hungry = True
 
     def _eat(self, food):
         """Food count decrement."""
         if self.hungry:
-            self.hungry = False
-            self.countdown -= 70
+            if self.countdown < 250:
+                self.hungry = False
+            self.countdown -= 50
             self._countdown()
             food._size -= 1
             food.size()
+
+    def _find_partner(self):
+        """Find another bug that is in heat."""
+        for bug in self.mtx._bugs:
+            bug = bug[1]
+            if bug.in_heat and self.id != bug.id:
+                self._breed(bug)
+                return
+
+    def _breed(self, partner):
+        """How to breed."""
+        # import pdb; pdb.set_trace()
+        self.in_heat = False
+        self.mature = False
+        self.countdown += 200
+        partner.in_heat = False
+        partner.mature = False
+        partner.countdown += 200
+        rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+        rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+        while self.mtx.mtx[rand_idx1][rand_idx2]:
+            rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+            rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+        # new_id = int(''.join([str(self.id)[0], str(partner.id)[0]]))
+        new = Bug(self.mtx.count + 1)
+        new.gen = GEN[GEN.index(self.gen) + 1]
+        self.mtx.mtx[rand_idx1][rand_idx2].append(new)
+        self.mtx._bugs.append((new.id, new))
+        new._location(self.mtx)
+        self._directions()
 
     def _countdown(self):
         """Manage life force."""
@@ -222,16 +278,15 @@ class Bug(object):
 
     def _starving(self):
         """What happens in death."""
-        if self.mtx._food:
-            self.countdown -= 5
-            self._countdown()
-            self._get_food()
-            return
+        # if self.mtx._food:
+        #     # self.countdown -= 1
+        #     # self._countdown()
+        #     self._get_food()
+        #     return
         for bug in self.mtx._bugs:
             if bug[0] == self.id:
+                self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
                 self.mtx._bugs.remove(bug)
-        self.mtx.mtx[self.idx['x']][self.idx['y']].remove(self)
-        return
 
     def _directions(self):
         """
@@ -253,35 +308,44 @@ class Bug(object):
             bug[1].directions = []
             x = bug[1].idx['x']
             y = bug[1].idx['y']
-            self._pos_dir(bug, mtx, x, y)
+            self._pos_x_dir(bug, mtx, x, y)
+            self._pos_y_dir(bug, mtx, x, y)
+            self._pos_xy_dir(bug, mtx, x, y)
             self._neg_dir(bug, mtx, x, y)
-            # if not bug[1].hungry:
-            #     bug[1]._hungry()
 
-    def _pos_dir(self, bug, mtx, x, y):
+    def _pos_xy_dir(self, bug, mtx, x, y):
+        """."""
+        try:
+            if len(mtx[x + 1][y + 1]) == 0:
+                bug[1].directions.append([x + 1, y + 1])
+            elif len(mtx[x + 1][y + 1]) == 1:
+                if type(mtx[x + 1][y + 1][0]).__name__ == 'Food':
+                    bug[1]._hungry()
+                    bug[1]._eat(mtx[x + 1][y + 1][0])
+        except IndexError:
+            pass
+
+    def _pos_x_dir(self, bug, mtx, x, y):
+        """."""
+        try:
+            if len(mtx[x + 1][y]) == 0:
+                bug[1].directions.append([x + 1, y])
+            elif len(mtx[x + 1][y]) == 1:
+                if type(mtx[x + 1][y][0]).__name__ == 'Food':
+                    bug[1]._hungry()
+                    bug[1]._eat(mtx[x + 1][y][0])
+        except IndexError:
+            pass
+
+    def _pos_y_dir(self, bug, mtx, x, y):
         """Get positive directions."""
         try:
             if len(mtx[x][y + 1]) == 0:
                 bug[1].directions.append([x, y + 1])
             elif len(mtx[x][y + 1]) == 1:
                 if type(mtx[x][y + 1][0]).__name__ == 'Food':
+                    bug[1]._hungry()
                     bug[1]._eat(mtx[x][y + 1][0])
-        except IndexError:
-            pass
-        try:
-            if len(mtx[x + 1][y]) == 0:
-                bug[1].directions.append([x + 1, y])
-            elif len(mtx[x + 1][y]) == 1:
-                if type(mtx[x + 1][y][0]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x + 1][y][0])
-        except IndexError:
-            pass
-        try:
-            if len(mtx[x + 1][y + 1]) == 0:
-                bug[1].directions.append([x + 1, y + 1])
-            elif len(mtx[x + 1][y + 1]) == 1:
-                if type(mtx[x + 1][y + 1][0]).__name__ == 'Food':
-                    bug[1]._eat(mtx[x + 1][y + 1][0])
         except IndexError:
             pass
 
@@ -296,6 +360,7 @@ class Bug(object):
                 bug[1].directions.append([x - 1, y - 1])
             elif len(mtx[x - 1][y - 1]) == 1:
                 if type(mtx[x - 1][y - 1][0]).__name__ == 'Food':
+                    bug[1]._hungry()
                     bug[1]._eat(mtx[x - 1][y - 1][0])
 
     def _neg_x(self, bug, mtx, x, y):
@@ -305,6 +370,7 @@ class Bug(object):
                 bug[1].directions.append([x - 1, y + 1])
             elif len(mtx[x - 1][y + 1]) == 1:
                 if type(mtx[x - 1][y + 1][0]).__name__ == 'Food':
+                    bug[1]._hungry()
                     bug[1]._eat(mtx[x - 1][y + 1][0])
         except IndexError:
             pass
@@ -312,6 +378,7 @@ class Bug(object):
             bug[1].directions.append([x - 1, y])
         elif len(mtx[x - 1][y]) == 1:
             if type(mtx[x - 1][y][0]).__name__ == 'Food':
+                bug[1]._hungry()
                 bug[1]._eat(mtx[x - 1][y][0])
 
     def _neg_y(self, bug, mtx, x, y):
@@ -321,6 +388,7 @@ class Bug(object):
                 bug[1].directions.append([x + 1, y - 1])
             elif len(mtx[x + 1][y - 1]) == 1:
                 if type(mtx[x + 1][y - 1][0]).__name__ == 'Food':
+                    bug[1]._hungry()
                     bug[1]._eat(mtx[x + 1][y - 1][0])
         except IndexError:
             pass
@@ -328,4 +396,5 @@ class Bug(object):
             bug[1].directions.append([x, y - 1])
         elif len(mtx[x][y - 1]) == 1:
             if type(mtx[x][y - 1][0]).__name__ == 'Food':
+                bug[1]._hungry()
                 bug[1]._eat(mtx[x][y - 1][0])

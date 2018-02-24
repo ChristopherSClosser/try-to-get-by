@@ -3,11 +3,10 @@
 from django.shortcuts import render
 from .models import start, feed
 from django.views.decorators.csrf import csrf_protect
-# from django.views.generic.base import TemplateView
 from urllib.parse import parse_qs, urlparse
 from django.shortcuts import redirect, reverse
 
-MTX = start(9, 20)
+MTX = start(9, 18)
 
 
 @csrf_protect
@@ -19,28 +18,23 @@ def front_input(request):  # pragma no cover
     MTX = start(bugs, size)
     res = request
     res.session['MTX'] = MTX
-    # request['MTX'] = MTX
     return res
-    # return render(request, 'getby/matrix.html', {
-    #     'matrix': MTX.mtx,
-    #     'bug': MTX._bugs[0][1].count,
-    # })
 
 
 @csrf_protect
 def index(request):  # pragma no cover
     """."""
-    # MTX = request.session['MTX']
-    # import pdb; pdb.set_trace()
-
     if len(MTX._bugs) > 0:
         if request.method == 'POST':
             feed(MTX)
-        bug = MTX._bugs[0][1].count
+        bug = MTX._bugs[-1][1].count
+        countdown = MTX._bugs[-1][1].countdown
+        old_bug = MTX._bugs[0][1].count
+        young_bug = MTX._bugs[-1][1].id
         try:
             MTX._bugs[0][1]._move_all_together()
             bugs = len(MTX._bugs)
-        except:
+        except IndexError:
             return render(request, 'getby/matrix.html', {
                 'matrix': MTX.mtx,
             })
@@ -48,6 +42,9 @@ def index(request):  # pragma no cover
             'matrix': MTX.mtx,
             'bugs': bugs,
             'bug': bug,
+            'old': old_bug,
+            'young': young_bug,
+            'cd': countdown,
         })
     elif len(MTX._bugs) == 0:
         return redirect(reverse('homenobugs'))

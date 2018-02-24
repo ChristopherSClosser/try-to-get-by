@@ -1,5 +1,6 @@
 .container{
   display: -webkit-box;
+  font-family: monospace;
 }
 
 .row{
@@ -13,7 +14,7 @@
 }
 
 .food{
-  background-color: red;
+  background-color: orange;
 }
 
 .run{

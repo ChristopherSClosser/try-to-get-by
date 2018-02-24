@@ -6,16 +6,37 @@
 
 {% block content %}
   <div class="">
+    {% if old %}
+      {{ old }}
+    {% endif %}
     {% if bug %}
       {{ bug }}
     {% endif %}
-    {% if bugs %}
+    {% if cd %}
+      {{ cd }}
+    {% endif %}
+    {% if young %}
+      {{ young }}
+    {% endif %}
+    {% if bugs > 0 %}
       <h3>Moving...</h3>
       {{ bugs }} live bugs
     {% else %}
       <div class="">
         You let them all die...<br>Restart server to continue
       </div>
+      <script type="text/javascript">
+        clearTimeout()
+        (function update() {
+          $.ajax({
+            type: "GET",
+            url: '/nobugs',  // URL to your view that serves new info
+            success: function(data) {
+              $('#matrix').html(data)
+            }
+          })
+        })()
+      </script>
     {% endif %}
   </div>
   <br>
@@ -27,7 +48,7 @@
             {% if spot.0 %}
               {% if spot.0.id %}
                 <div class="bug">
-                  {{ spot.0.id }}
+                  {{ spot.0.gen }}
                   <!-- {{ 0 }} -->
                 </div>
               {% else %}
