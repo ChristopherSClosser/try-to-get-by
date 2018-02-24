@@ -153,6 +153,8 @@ class Bug(object):
             if move_to:
                 self._move(move_to)
             return
+
+        """
         # ----- these methods will take the group into the four corners ----- #
         # nums = []
         # if self.rand_int == 3 or self.rand_int == 9 or self.rand_int == 10:
@@ -175,6 +177,7 @@ class Bug(object):
         # # now perform move #
         # move_to = self.directions[index_min]
         # ------------------------------------------------------------------- #
+        """
 
     def _move_random(self):
         """
