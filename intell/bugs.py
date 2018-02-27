@@ -256,7 +256,7 @@ class Bug(object):
                 return
 
     def _rand_idx(self):
-        """."""
+        """Get random index next to parents."""
         rand_idx = random.randrange(len(self.directions) - 1)
         rand_idx1 = self.directions[rand_idx][0]
         rand_idx2 = self.directions[rand_idx][1]
@@ -264,6 +264,7 @@ class Bug(object):
 
     def _breed(self, partner):
         """How to breed."""
+        # ------ manage population to under 75% of total matrix space ------ #
         max_amt = int((self.mtx._size ** 2) * 0.75)
         if len(self.mtx._bugs) < max_amt:
             self.in_heat = False
@@ -275,7 +276,8 @@ class Bug(object):
             if len(self.directions) > 1:
                 rand_idx1, rand_idx2 = self._rand_idx()[0], self._rand_idx()[1]
             elif len(partner.directions) > 1:
-                rand_idx1, rand_idx2 = partner._rand_idx()[0], partner._rand_idx()[1]
+                rand_idx1 = partner._rand_idx()[0]
+                rand_idx2 = partner._rand_idx()[1]
             else:
                 rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
                 rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
@@ -293,7 +295,7 @@ class Bug(object):
             self._directions()
 
     def _countdown(self):
-        """Manage life force."""
+        """Manage life force, not to be negative."""
         if self.countdown <= 0:
             self.countdown = 1
 
@@ -308,10 +310,10 @@ class Bug(object):
         """
         Given the matrix find available directions to travel.
 
-        Each time all bugs get new directions.
+        Each time one bug moves, all bugs get new directions.
         First initiated by start...
         Bug needs to know where it can move ie. N, NE, E, SE, S, SW, W, NW
-        ...cannot move in negative index direction
+        ...cannot move into a negative index
         [
           [[], [], []],  > if bug1 is @ mtx[0][0] - directions = [E, SE, S]
           [[], [], []],    if bug2 @ mtx[0][1] bug1 directions = [SE, S] ect..
