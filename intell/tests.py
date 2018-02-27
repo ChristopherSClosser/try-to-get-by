@@ -279,7 +279,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(2500):
             count += 1
-            print(count, len(mtx._bugs), len(mtx._food))
+            # print(count, len(mtx._bugs), len(mtx._food))
             if mtx._bugs[0][1].hungry:
                 models.feed(mtx, 4)
             mtx._bugs[0][1]._move_all_together()
@@ -333,7 +333,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(5000):
             count += 1
-            print(count, len(mtx._bugs), len(mtx._food))
+            # print(count, len(mtx._bugs), len(mtx._food))
             if _ == 4150:
                 assert mtx._bugs[0] != 1
             if len(mtx._bugs) == 0:
@@ -352,7 +352,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(10000):
             count += 1
-            print(count, len(mtx._bugs), len(mtx._food))
+            # print(count, len(mtx._bugs), len(mtx._food))
             if len(mtx._bugs) == 0:
                 break
             if bug.hungry and len(mtx._food) < 4:
@@ -368,7 +368,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(1000):
             count += 1
-            print(count, len(mtx._bugs))
+            # print(count, len(mtx._bugs))
             if len(mtx._bugs) == 0:
                 break
             if bug.countdown == 496:
@@ -383,7 +383,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(2000):
             count += 1
-            print(count, len(mtx._bugs))
+            # print(count, len(mtx._bugs))
             if _ == 1300:
                 assert len(mtx._bugs) > 9
             if len(mtx._bugs) == 0:
@@ -400,7 +400,7 @@ class ProfileTestCase(TestCase):
         count = 0
         for _ in range(15000):
             count += 1
-            print(count, len(mtx._bugs))
+            # print(count, len(mtx._bugs))
             if len(mtx._bugs) == 0:
                 break
             if bug.hungry and len(mtx._food) < 4:
