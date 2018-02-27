@@ -4,10 +4,7 @@ import random
 from . import models
 
 
-GEN = '''
-    !"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]
-    ^_`abcdefghijklmnopqrstuvwxyz{|}
-'''
+GEN = '''!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}'''
 
 
 class Bug(object):
@@ -62,32 +59,68 @@ class Bug(object):
         self.count += 1
         self.countdown += 1
 
+    def _is_starving(self):
+        """."""
+        if self.count >= 4000 or self.countdown >= 500:
+            self._starving()
+            return True
+        return False
+
     def _move_all_together(self):
         """For each bug call move together."""
         # ------------- auto feed from bug 1 ------------- #
-        # if self.mtx._bugs[0][1].hungry:
-        #     if len(self.mtx._food) <= 10:
-        #         models.feed(self.mtx, 1)
-        #     if self.mtx._bugs[0][1].countdown < 470:
-        #         models.feed(self.mtx, 1)
+        # if self.mtx._bugs[0][1].hungry and len(self.mtx._food) <= 4:
+        #     models.feed(self.mtx, 1)
+        # if self.mtx._bugs[0][1].countdown < 470:
+        #     models.feed(self.mtx, 1)
         # ------------------------------------------------ #
-
+        if len(self.mtx._bugs) == 1 and len(self.mtx._bugs[0][1].directions) > 0:
+            self.mtx._bugs[0][1]._hungry()
+            if self.mtx._bugs[0][1]._is_starving():
+                return
+            # if bug[1].count >= 4000 or bug[1].countdown >= 500:
+            #     bug[1]._starving()
+            #     continue
+            # elif self.mtx._bugs[0][1].hungry:
+            #     self.mtx._bugs[0][1]._get_food()
+            #     return
+            self.mtx._bugs[0][1]._move_random()
+            return
         for bug in self.mtx._bugs:
-            if len(self.mtx._bugs) == 1:
-                if bug[1].countdown >= 500:
-                    bug[1]._starving()
-                    continue
-                move_to = bug[1].directions[0]
-                bug[1]._move(move_to)
-                continue
-            if len(self.mtx._bugs) == 2 and len(bug[1].directions) > 0:
-                if bug[1].countdown >= 500:
-                    bug[1]._starving()
-                    continue
-                move_to = bug[1].directions[0]
-                bug[1]._move(move_to)
-                continue
             bug[1]._hungry()
+            # if len(self.mtx._bugs) == 1 and len(bug[1].directions) > 0:
+            #     if bug[1]._is_starving():
+            #         continue
+            #     # if bug[1].count >= 4000 or bug[1].countdown >= 500:
+            #     #     bug[1]._starving()
+            #     #     continue
+            #     elif bug[1].hungry:
+            #         bug[1]._get_food()
+            #         continue
+            #     bug[1]._move_random()
+            #     continue
+            if len(self.mtx._bugs) == 2 and len(bug[1].directions) > 0:
+                if bug[1].count % 1000 == 0 and bug[1].count > 0:
+                    bug[1].mature = True
+                if bug[1].count >= 4000 or bug[1].countdown >= 500:
+                    bug[1]._starving()
+                    continue
+                if bug[1].hungry:
+                    bug[1]._get_food()
+                    continue
+                if bug[1].mature and bug[1].countdown > 200:
+                    bug[1].hungry = True
+                    bug[1]._get_food()
+                    continue
+                elif bug[1].mature and bug[1].countdown <= 200:
+                    # time to breed #
+                    bug[1].in_heat = True
+                    bug[1]._find_partner()
+                    bug[1].hungry = True
+                    bug[1]._get_food()
+                    continue
+                bug[1]._move_random()
+                continue
             if bug[1].count % 1000 == 0 and bug[1].count > 0:
                 bug[1].mature = True
             if bug[1].count >= 4000 or bug[1].countdown >= 500:
@@ -131,8 +164,10 @@ class Bug(object):
             move_to = self._get_move_to(move_to_x, move_to_y)
             if move_to:
                 self._move(move_to)
-        else:
+        elif len(self.mtx._bugs) > 2:
             self._get_together()
+        elif len(self.mtx._bugs) <= 2:
+            self._move_random()
 
     def _get_together(self):
         """
@@ -214,6 +249,7 @@ class Bug(object):
             or self.countdown > 475
         ):
             self.hungry = True
+            # self._get_food()
 
     def _eat(self, food):
         """Food count decrement."""

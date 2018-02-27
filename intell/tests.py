@@ -44,7 +44,7 @@ class ProfileTestCase(TestCase):
 
     def test_std_matrix_init_size(self):
         """."""
-        assert self.std_mtx._size == 'small'
+        assert self.std_mtx._size == 3
 
     def test_std_matrix_init_marix(self):
         """."""
@@ -67,7 +67,7 @@ class ProfileTestCase(TestCase):
         """."""
         for _ in range(20):
             models.feed(self.sixbyten)
-        assert len(self.sixbyten._food) == 40
+        assert len(self.sixbyten._food) == 34
 
     def test_mtx_move_all_random(self):
         """."""
@@ -280,6 +280,24 @@ class ProfileTestCase(TestCase):
             mtx._bugs[0][1]._move_all_together()
         assert mtx._bugs
 
+    def test_death_at_4000(self):
+        """."""
+        mtx = models.start(9, 20)
+        models.feed(mtx)
+        bug = mtx._bugs[0][1]
+        count = 0
+        for _ in range(5000):
+            count += 1
+            # print(count, len(mtx._bugs), len(mtx._food))
+            if _ == 4150:
+                assert mtx._bugs[0] != 1
+            if len(mtx._bugs) == 0:
+                break
+            if bug.hungry and len(mtx._food) < 4:
+                models.feed(mtx, 1)
+            bug._move_all_together()
+        assert mtx
+
     def test_matrix_move_together_little_food(self):
         """."""
         mtx = models.start(9, 20)
@@ -313,25 +331,30 @@ class ProfileTestCase(TestCase):
             bug._move_all_together()
         assert mtx
 
-    def test_matrix_move_together_little_food_3(self):
+    def test_matrix_move_together_breed(self):
         """."""
-        mtx = models.start(5, 10)
-        models.feed(mtx)
+        mtx = models.start(9, 15)
         bug = mtx._bugs[0][1]
+        count = 0
         for _ in range(2000):
-            if len(mtx._bugs) <= 2:
+            count += 1
+            print(count, len(mtx._bugs))
+            if _ == 1300:
+                assert len(mtx._bugs) > 9
+            if len(mtx._bugs) == 0:
                 break
-            if bug.countdown == 475:
-                models.feed(mtx)
+            if bug.hungry:
+                models.feed(mtx, 2)
             bug._move_all_together()
-        models.feed(mtx)
         assert mtx
 
     def test_matrix_move_together_no_food(self):
         """."""
         mtx = models.start(9, 20)
         bug = mtx._bugs[0][1]
-        for _ in range(500):
+        for _ in range(510):
+            if len(mtx._bugs) == 0:
+                break
             bug._move_all_together()
         assert mtx
 

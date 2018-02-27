@@ -9,7 +9,7 @@ from intell.bugs import Bug
 class Matrix(models.Model):
     """Make the grid."""
 
-    def __init__(self, _size='small', *args, **kwargs):
+    def __init__(self, _size=3, *args, **kwargs):
         """."""
         super().__init__(*args, **kwargs)
         self._bugs = []
@@ -21,7 +21,7 @@ class Matrix(models.Model):
             [[], [], []],
             [[], [], []],
         ]
-        if _size != 'small':
+        if _size != 3:
             self.mtx = []
             for i in range(_size):
                 self.mtx.append([])
@@ -69,20 +69,22 @@ def feed(grid, size=10):
     ]
     Food will be randomly placed.
     """
-    for _ in range(2):
-        rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
-        rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        while grid.mtx[rand_idx1][rand_idx2]:
+    max_amt = (grid._size ** 2) // 3
+    if len(grid._food) < max_amt:
+        for _ in range(2):
             rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
             rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
-        new = Food(grid, size)
-        grid.mtx[rand_idx1][rand_idx2].append(new)
-        new.fid = len(grid._food)
-        grid._food.append(new)
-        new._location()
+            while grid.mtx[rand_idx1][rand_idx2]:
+                rand_idx1 = random.randint(0, (len(grid.mtx) - 1))
+                rand_idx2 = random.randint(0, (len(grid.mtx) - 1))
+            new = Food(grid, size)
+            grid.mtx[rand_idx1][rand_idx2].append(new)
+            new.fid = len(grid._food)
+            grid._food.append(new)
+            new._location()
 
 
-def start(bugs=3, size='small'):
+def start(bugs=3, size=3):
     """
     Init matrix and bugs.
 
