@@ -74,31 +74,17 @@ class Bug(object):
         # if self.mtx._bugs[0][1].countdown < 470:
         #     models.feed(self.mtx, 1)
         # ------------------------------------------------ #
-        if len(self.mtx._bugs) == 1 and len(self.mtx._bugs[0][1].directions) > 0:
+        if (
+            len(self.mtx._bugs) == 1
+            and len(self.mtx._bugs[0][1].directions) > 0
+        ):
             self.mtx._bugs[0][1]._hungry()
             if self.mtx._bugs[0][1]._is_starving():
                 return
-            # if bug[1].count >= 4000 or bug[1].countdown >= 500:
-            #     bug[1]._starving()
-            #     continue
-            # elif self.mtx._bugs[0][1].hungry:
-            #     self.mtx._bugs[0][1]._get_food()
-            #     return
             self.mtx._bugs[0][1]._move_random()
             return
         for bug in self.mtx._bugs:
             bug[1]._hungry()
-            # if len(self.mtx._bugs) == 1 and len(bug[1].directions) > 0:
-            #     if bug[1]._is_starving():
-            #         continue
-            #     # if bug[1].count >= 4000 or bug[1].countdown >= 500:
-            #     #     bug[1]._starving()
-            #     #     continue
-            #     elif bug[1].hungry:
-            #         bug[1]._get_food()
-            #         continue
-            #     bug[1]._move_random()
-            #     continue
             if len(self.mtx._bugs) == 2 and len(bug[1].directions) > 0:
                 if bug[1].count % 1000 == 0 and bug[1].count > 0:
                     bug[1].mature = True
