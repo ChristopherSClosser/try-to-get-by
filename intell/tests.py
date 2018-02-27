@@ -393,6 +393,22 @@ class ProfileTestCase(TestCase):
             bug._move_all_together()
         assert mtx
 
+    def test_breed_GEN_max(self):
+        """."""
+        bugs.GEN = '012'
+        mtx = models.start(2, 15)
+        bug = mtx._bugs[0][1]
+        count = 0
+        for _ in range(7000):
+            count += 1
+            # print(count, len(mtx._bugs))
+            if len(mtx._bugs) == 0:
+                break
+            if bug.hungry:
+                models.feed(mtx, 4)
+            bug._move_all_together()
+        assert mtx
+
     def test_over_breed_limit(self):
         """."""
         mtx = models.start(9, 8)
