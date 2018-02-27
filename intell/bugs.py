@@ -255,25 +255,39 @@ class Bug(object):
                 self._breed(bug)
                 return
 
+    def _rand_idx(self):
+        """."""
+        rand_idx = random.randrange(len(self.directions) - 1)
+        rand_idx1 = self.directions[rand_idx][0]
+        rand_idx2 = self.directions[rand_idx][1]
+        return [rand_idx1, rand_idx2]
+
     def _breed(self, partner):
         """How to breed."""
-        self.in_heat = False
-        self.mature = False
-        self.countdown += 200
-        partner.in_heat = False
-        partner.mature = False
-        partner.countdown += 200
-        rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
-        rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        while self.mtx.mtx[rand_idx1][rand_idx2]:
-            rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
-            rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
-        new = Bug(self.mtx.count + 1)
-        new.gen = GEN[GEN.index(self.gen) + 1]
-        self.mtx.mtx[rand_idx1][rand_idx2].append(new)
-        self.mtx._bugs.append((new.id, new))
-        new._location(self.mtx)
-        self._directions()
+        max_amt = int((self.mtx._size ** 2) * 0.75)
+        if len(self.mtx._bugs) < max_amt:
+            self.in_heat = False
+            self.mature = False
+            self.countdown += 200
+            partner.in_heat = False
+            partner.mature = False
+            partner.countdown += 200
+            if len(self.directions) > 1:
+                rand_idx1, rand_idx2 = self._rand_idx()[0], self._rand_idx()[1]
+            elif len(partner.directions) > 1:
+                rand_idx1, rand_idx2 = partner._rand_idx()[0], partner._rand_idx()[1]
+            else:
+                rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+                rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+            while self.mtx.mtx[rand_idx1][rand_idx2]:
+                rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
+                rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
+            new = Bug(self.mtx.count + 1)
+            new.gen = GEN[GEN.index(self.gen) + 1]
+            self.mtx.mtx[rand_idx1][rand_idx2].append(new)
+            self.mtx._bugs.append((new.id, new))
+            new._location(self.mtx)
+            self._directions()
 
     def _countdown(self):
         """Manage life force."""

@@ -283,7 +283,7 @@ class ProfileTestCase(TestCase):
             if mtx._bugs[0][1].hungry:
                 models.feed(mtx, 4)
             mtx._bugs[0][1]._move_all_together()
-        assert len(mtx._bugs) > 2
+        assert mtx
 
     def test_matrix_move_together_feed(self):
         """."""
@@ -294,6 +294,36 @@ class ProfileTestCase(TestCase):
                 models.feed(mtx)
             mtx._bugs[0][1]._move_all_together()
         assert mtx._bugs
+
+    def test_2_bugs_death(self):
+        """."""
+        mtx = models.start(2, 10)
+        models.feed(mtx)
+        for _ in range(2500):
+            if len(mtx._bugs) == 0:
+                break
+            mtx._bugs[0][1]._move_all_together()
+        assert mtx
+
+    def test_2_bugs(self):
+        """."""
+        mtx = models.start(2, 10)
+        models.feed(mtx)
+        for _ in range(5000):
+            if mtx._bugs[0][1].hungry:
+                models.feed(mtx)
+            mtx._bugs[0][1]._move_all_together()
+        assert mtx
+
+    def test_1_bug(self):
+        """."""
+        mtx = models.start(1, 10)
+        models.feed(mtx)
+        for _ in range(5000):
+            if len(mtx._bugs) == 0:
+                break
+            mtx._bugs[0][1]._move_all_together()
+        assert mtx
 
     def test_death_at_4000(self):
         """."""
@@ -326,7 +356,7 @@ class ProfileTestCase(TestCase):
             if len(mtx._bugs) == 0:
                 break
             if bug.hungry and len(mtx._food) < 4:
-                models.feed(mtx, 1)
+                models.feed(mtx, 2)
             bug._move_all_together()
         assert mtx
 
@@ -360,6 +390,21 @@ class ProfileTestCase(TestCase):
                 break
             if bug.hungry:
                 models.feed(mtx, 2)
+            bug._move_all_together()
+        assert mtx
+
+    def test_over_breed_limit(self):
+        """."""
+        mtx = models.start(9, 8)
+        bug = mtx._bugs[0][1]
+        count = 0
+        for _ in range(15000):
+            count += 1
+            print(count, len(mtx._bugs))
+            if len(mtx._bugs) == 0:
+                break
+            if bug.hungry and len(mtx._food) < 4:
+                models.feed(mtx, 4)
             bug._move_all_together()
         assert mtx
 
