@@ -270,6 +270,21 @@ class ProfileTestCase(TestCase):
             mtx._bugs[0][1]._move_all_together()
         assert len(mtx._bugs) == 5
 
+    def test_2_bug_start(self):
+        """."""
+        mtx = models.start(2, 10)
+        models.feed(mtx)
+        models.feed(mtx)
+        models.feed(mtx)
+        count = 0
+        for _ in range(2500):
+            count += 1
+            print(count, len(mtx._bugs), len(mtx._food))
+            if mtx._bugs[0][1].hungry:
+                models.feed(mtx, 4)
+            mtx._bugs[0][1]._move_all_together()
+        assert len(mtx._bugs) > 2
+
     def test_matrix_move_together_feed(self):
         """."""
         mtx = models.start(9, 10)
