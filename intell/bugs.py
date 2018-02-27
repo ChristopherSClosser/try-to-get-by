@@ -4,7 +4,7 @@ import random
 from . import models
 
 
-GEN = '''!"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}'''
+GEN = '''0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!"#$%&'()*+,-./:;<=>?@[]^_`{|}abcdefghijklmnopqrstuvwxyz'''
 
 
 class Bug(object):
@@ -283,7 +283,10 @@ class Bug(object):
                 rand_idx1 = random.randint(0, (len(self.mtx.mtx) - 1))
                 rand_idx2 = random.randint(0, (len(self.mtx.mtx) - 1))
             new = Bug(self.mtx.count + 1)
-            new.gen = GEN[GEN.index(self.gen) + 1]
+            try:
+                new.gen = GEN[GEN.index(self.gen) + 1]
+            except IndexError:
+                new.gen = GEN[0]
             self.mtx.mtx[rand_idx1][rand_idx2].append(new)
             self.mtx._bugs.append((new.id, new))
             new._location(self.mtx)
