@@ -9,16 +9,16 @@ from django.shortcuts import redirect, reverse
 MTX = start(2, 18)
 
 
-@csrf_protect
-def front_input(request):  # pragma no cover
-    """."""
-    res = parse_qs(urlparse(request.get_full_path()).query)
-    bugs = int(res['bugs'][0])
-    size = int(res['size'][0])
-    MTX = start(bugs, size)
-    res = request
-    res.session['MTX'] = MTX
-    return res
+# @csrf_protect
+# def front_input(request):  # pragma no cover
+#     """."""
+#     res = parse_qs(urlparse(request.get_full_path()).query)
+#     bugs = int(res['bugs'][0])
+#     size = int(res['size'][0])
+#     MTX = start(bugs, size)
+#     res = request
+#     res.session['MTX'] = MTX
+#     return res
 
 
 @csrf_protect
