@@ -45,6 +45,11 @@ Now now that you have cloned your repo and changed directories into the project,
 `$ source ENV/bin/activate`
 
 `$ pip install -r requirements.txt`
+
+`$ export SECRET_KEY='secret'`
+
+`$ export DEBUG=True`
+
 ##### *Serving Locally*
 Once you have cloned the application and installed the requirements, you can serve the project on your local machine by executing this command from your terminal, on the same level as `manage.py`.
 
@@ -100,8 +105,7 @@ This project is licensed under MIT License - see the LICENSE.md file for details
 ---
 
 <center>
-  
+
 *This README was generated using [writeme.](https://github.com/chelseadole/write-me)*
 
 </center>
-
