@@ -5,7 +5,23 @@
 
 Version: *beta 0.0.1*
 
-An Experiment...
+##### *An Experiment in AI and Hive Mind Swarm Intelligence*
+Pondering research involving nano technology, and observing insect and avian swarms, peaked my curiosity to see if I could create a two dimensional representation of this behavior. Using Django for the front end and fundamental data structure and algorithm theories on the back end, I was able to come up with something quite convincingly life like... of course totaly under my control.
+
+###### As of now they are able to:
+- move freely
+- eat
+- procreate
+- die
+- all while wanting to be near each other
+
+###### I am able to:
+- put a population cap or not
+- limit life spans or not
+- auto feed to sustain population
+- give them a queen or not
+
+*From here it will be fairly straight forward to implement a three dimensional environment and initiate tasks.*
 
 <br/>
 
@@ -66,7 +82,16 @@ Currently the bug and size selectors are not functioning, but click the run butt
 ##### *Running Tests*
 This is a Django application, and therefore to run tests, run the following command at the same level as `./manage.py`.
 
-`./manage.py test`
+`$ ./manage.py test`
+
+For testing coverage report run the following command:
+
+`$ coverage run ./manage.py test`
+
+Once testing is complete:
+
+`$ coverge report -m`
+
 ##### *Test Files*
 The testing files for this project are:
 
@@ -90,7 +115,7 @@ The URLS for this project can be found in the following modules:
 ### Development Tools
 ---
 * *python* - programming language
-* *django* - web framework
+* *Django* - web framework
 * *jQuery* - programming language
 
 <br/>
