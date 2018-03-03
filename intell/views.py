@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_protect
 from urllib.parse import parse_qs, urlparse
 from django.shortcuts import redirect, reverse
 
-MTX = start(2, 18)
+MTX = start(9, 18)
 
 
 # @csrf_protect
@@ -30,6 +30,8 @@ def index(request):  # pragma no cover
         bug = MTX._bugs[-1][1].count
         countdown = MTX._bugs[-1][1].countdown
         old_bug = MTX._bugs[0][1].count
+        old_cd = MTX._bugs[0][1].countdown
+        old_id = MTX._bugs[0][1].id
         young_bug = MTX._bugs[-1][1].id
         try:
             MTX._bugs[0][1]._move_all_together()
@@ -43,6 +45,8 @@ def index(request):  # pragma no cover
             'bugs': bugs,
             'bug': bug,
             'old': old_bug,
+            'oldid': old_id,
+            'oldcd': old_cd,
             'young': young_bug,
             'cd': countdown,
         })
