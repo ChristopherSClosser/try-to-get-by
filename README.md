@@ -21,7 +21,7 @@ Pondering research involving nano technology, and observing insect and avian swa
 - auto feed to sustain population
 - give them a queen or not
 
-*From here it will be fairly straight forward to implement a three dimensional environment and initiate tasks.*
+*From here it will be fairly straight forward to implement a three dimensional environment and initiate tasks. My fascination with biology and current nano technology, leaves me thinking about the potential that with proper instructions cancers and non curable viruses in the body could be eradicated.*
 
 <br/>
 

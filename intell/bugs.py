@@ -59,13 +59,6 @@ class Bug(object):
         self.count += 1
         self.countdown += 1
 
-    # def _is_starving(self):
-    #     """."""
-    #     if self.count >= 4000 or self.countdown >= 500:
-    #         self._starving()
-    #         return True
-    #     return False
-
     def _move_all_together(self):
         """For each bug call move together."""
         # ------------- auto feed from bug 1 ------------- #
