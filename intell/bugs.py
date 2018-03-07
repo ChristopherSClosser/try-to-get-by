@@ -236,7 +236,6 @@ class Bug(object):
             or self.countdown > 475
         ):
             self.hungry = True
-            # self._get_food()
 
     def _eat(self, food):
         """Food count decrement."""
