@@ -8,18 +8,18 @@ Version: *beta 0.0.1*
 ##### *An Experiment in AI and Hive Mind Swarm Intelligence*
 Pondering research involving nano technology, and observing insect and avian swarms, peaked my curiosity to see if I could create a two dimensional representation of this behavior. Using Django for the front end and fundamental data structure and algorithm theories on the back end, I was able to come up with something quite convincingly life like... of course totaly under my control.
 
-###### As of now they are able to:
+##### As of now they are able to:
 - move freely
 - eat
 - procreate
 - die
 - all while wanting to be near each other
 
-###### I am able to:
-- put a population cap or not
-- limit life spans or not
+##### I am able to:
+- put a population cap *or not*
+- limit life spans *or not*
+- give them a queen *or not*
 - auto feed to sustain population
-- give them a queen or not
 
 *From here it will be fairly straight forward to implement a three dimensional environment and initiate tasks. My fascination with biology and current nano technology, leaves me thinking about the potential that with proper instructions cancers and non curable viruses in the body could be eradicated.*
 
