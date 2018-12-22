@@ -3,7 +3,7 @@
 ---
 ### Description
 
-Version: *beta 0.0.1*
+Version: *beta 0.1.2*
 
 ##### *An Experiment in AI and Hive Mind Swarm Intelligence*
 Pondering research involving nano technology, and observing insect and avian swarms, peaked my curiosity to see if I could create a two dimensional representation of this behavior. Using Django for the front end and fundamental data structure and algorithm theories on the back end, I was able to come up with something quite convincingly life like... of course totaly under my control.
